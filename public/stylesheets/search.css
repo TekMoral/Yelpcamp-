@@ -1,0 +1,46 @@
+.sticky-search {
+    position: sticky;
+    top: 56px;
+    background-color: white;
+    padding: 1rem 0;
+    z-index: 999;
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    margin-top: 0;
+}
+
+@media (min-width: 768px) {
+    .sticky-search {
+        top: 60px;
+    }
+}
+
+.sticky-search .form-inline {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+}
+
+.sticky-search .form-control {
+    flex: 1;
+    max-width: 300px;
+}
+
+.content-wrapper {
+    padding-top: 1rem;
+}
+
+@media (max-width: 576px) {
+    .sticky-search .form-inline {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .sticky-search .form-control {
+        max-width: 100%;
+    }
+    
+    .sticky-search .btn {
+        width: 100%;
+    }
+}
