@@ -30,10 +30,23 @@ const userRoutes = require("./routes/users");
 const campgroundRoutes = require("./routes/campgrounds");
 const reviewRoutes = require("./routes/reviews");
 
+
+
+
+
+// In app.js:
+const dbUrl = process.env.NODE_ENV === "production" 
+    ? process.env.DB_URL 
+    : "mongodb://localhost:27017/yelpcamp";
+
+console.log("Current environment:", process.env.NODE_ENV);
+console.log("Using database:", dbUrl.includes("mongodb+srv") ? "MongoDB Atlas" : "Local MongoDB");
+
+
+
+
 //const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/yelp-camp';
-
-
-const dbUrl = "mongodb://localhost:27017/yelpcamp";
+//const dbUrl = "mongodb://localhost:27017/yelpcamp";
 //if(!dbUrl){
   //console.log("DB_URL not set");   
    //process.exit(1);
