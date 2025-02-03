@@ -3,7 +3,7 @@
 //}
 require('dotenv').config();
 
-
+console.log('Current Environment:', process.env.NODE_ENV);
 console.log(process.env.SECRET)
 
 
@@ -30,29 +30,8 @@ const userRoutes = require("./routes/users");
 const campgroundRoutes = require("./routes/campgrounds");
 const reviewRoutes = require("./routes/reviews");
 
+const dbUrl = process.env.DB_URL || "mongodb://127.0.0.1:27017/yelp-camp";
 
-
-
-
-// In app.js:
-const dbUrl = process.env.NODE_ENV === "production" 
-    ? process.env.DB_URL 
-    : "mongodb://localhost:27017/yelpcamp";
-
-console.log("Current environment:", process.env.NODE_ENV);
-console.log("Using database:", dbUrl.includes("mongodb+srv") ? "MongoDB Atlas" : "Local MongoDB");
-
-
-
-
-//const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/yelp-camp';
-//const dbUrl = "mongodb://localhost:27017/yelpcamp";
-//if(!dbUrl){
-  //console.log("DB_URL not set");   
-   //process.exit(1);
-//}
-
-//mongoose.connect("mongodb://localhost:27017/yelp-camp");
 mongoose.connect(dbUrl)
   .then(() => {
     console.log("MongoDB connected");
@@ -80,12 +59,12 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(mongoSanitize({replaceWith: '_'}));
 app.use(helmet({ contentSecurityPolicy: false }));
 
-
+const secret = process.env.SECRET || 'thisshouldbeabettersecret!';
 const store = MongoStore.create({
   mongoUrl: dbUrl,
   touchAfter: 24 * 60 * 60,
   crypto: {
-      secret: process.env.SECRET || 'thisshouldbeabettersecret!'
+      secret,
   }
 });
 
@@ -96,12 +75,12 @@ store.on("error", function(e) {
 const sessionConfig = {
   store,
   name: 'session',
-  secret: process.env.SECRET || 'thisshouldbeabettersecret!',
+  secret,
   resave: false,
   saveUninitialized: true,
   cookie: {
       httpOnly: true,
-      // secure: true, // Enable in production with HTTPS
+      secure: process.env.NODE_ENV === "production",  // Only use HTTPS in production
       expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
       maxAge: 1000 * 60 * 60 * 24 * 7
   }
@@ -144,10 +123,14 @@ app.use((err, req, res, next) => {
   const { statusCode = 500 } = err;
   if (!err.message) err.message = "Oh No, Something Went Wrong!";
   res.status(statusCode).render("error", { err });
+  err.stack = undefined;
+
 });
 
-const server = app.listen(3000, () => {
-  console.log("Listening on port 3000");
+
+const server = process.env.PORT || 3000;
+app.listen(server, () => {
+  console.log(`Serving on port ${server}`);
 });
 
 // Graceful shutdown
