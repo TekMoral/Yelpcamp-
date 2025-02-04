@@ -25,16 +25,22 @@ const MongoStore = require('connect-mongo');
 
 const mongoSanitize = require('express-mongo-sanitize');
 
+const { MongoClient, ServerApiVersion } = require('mongodb'); // Add this
+
 
 const userRoutes = require("./routes/users");
 const campgroundRoutes = require("./routes/campgrounds");
 const reviewRoutes = require("./routes/reviews");
 
-const dbUrl = process.env.DB_URL || "mongodb://127.0.0.1:27017/yelp-camp";
+const dbUrl = process.env.DB_URL || "mongodb://127.0.0.1:27017/yelpcamp";
 
-mongoose.connect(dbUrl)
+mongoose.connect(dbUrl, {
+  serverSelectionTimeoutMS: 30000,
+  socketTimeoutMS: 45000,
+  family: 4
+})
   .then(() => {
-    console.log("MongoDB connected");
+    console.log("MongoDB Atlas connected Succssfully");
   })
   .catch((err) => {
     console.log("MongoDB connection error");
@@ -46,6 +52,7 @@ db.on("error", console.error.bind(console, "connection error:"));
 db.once("open", () => {
   console.log("Database connected");
 });
+
 
 const app = express();
 
@@ -59,7 +66,7 @@ app.use(express.static(path.join(__dirname, "public")));
 app.use(mongoSanitize({replaceWith: '_'}));
 app.use(helmet({ contentSecurityPolicy: false }));
 
-const secret = process.env.SECRET || 'thisshouldbeabettersecret!';
+const secret = process.env.SESSION_SECRET || 'thisshouldbeabettersecret!';
 const store = MongoStore.create({
   mongoUrl: dbUrl,
   touchAfter: 24 * 60 * 60,

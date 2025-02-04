@@ -6,11 +6,14 @@
             <div class="mb-3">
                 <label class="form-label" for="title">Title</label>
                 <input class="form-control" type="text" id="title" name="campground[title]" required>
+                <div class="invalid-feedback">Title required</div>
                 <div class="valid-feedback"> Looks good!</div>
             </div>
             <div class="mb-3">
                 <label class="form-label" for="location">Location</label>
                 <input class="form-control" type="text" id="location" name="campground[location]" required>
+                <div class="valid-feedback">looks good!</div>
+                <div class="invalid-feedback">location required</div>
             </div>
             
         
@@ -23,8 +26,9 @@
                 <label class="form-label" for="image">Campground Price</label>
             <div class="input-group ">
                 <span class="input-group-text" id="price-label">$</span>
-                <input type="text" class="form-control" id="price" placeholder="0.00" aria-label="Username" aria-describedby="price-label"
-                name="campground[price]" required>
+                <input type="number" class="form-control" id="price" placeholder="0.00" aria-label="price" aria-describedby="price-label"
+                name="campground[price]" required min="0" step="o.o1" onward="return event.keycode !==189">
+                <div class="invalid-feedback">Price must be greater than or equal to 0</div>
               </div>
             </div>
 
