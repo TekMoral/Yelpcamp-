@@ -1,0 +1,18 @@
+.show-container {
+    position: relative;
+    background-color: #63a3e2;
+    background-image: 
+        radial-gradient(at 47% 33%, hsl(161, 36%, 10%) 0, transparent 89%), 
+        radial-gradient(at 82% 65%, hsl(218.00, 39%, 11%) 0, transparent 55%);
+        width: 100%;
+}
+
+/* Dark mode */
+@media (prefers-color-scheme: dark) {
+    .show-container {
+        background-color: #212529;
+        background-image: 
+            radial-gradient(at 47% 33%, hsl(162.00, 77%, 40%) 0, transparent 59%), 
+            radial-gradient(at 82% 65%, hsl(218.00, 39%, 11%) 0, transparent 55%);
+    }
+}
