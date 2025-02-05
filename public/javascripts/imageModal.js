@@ -4,6 +4,7 @@ const modalImage = document.querySelector('.fullscreen-image');
 const closeButton = document.querySelector('.close-button');
 const prevButton = document.querySelector('.prev-btn');
 const nextButton = document.querySelector('.next-btn');
+const campgroundImages = document.querySelectorAll('.carousel-item img');
 let images = [];
 
 // Function to open the modal
@@ -71,3 +72,11 @@ document.addEventListener('keydown', (e) => {
 // Add click handlers to navigation buttons if they exist
 if (prevButton) prevButton.addEventListener('click', showPrevImage);
 if (nextButton) nextButton.addEventListener('click', showNextImage);
+
+campgroundImages.forEach(image => {
+    image.style.cursor = 'pointer';
+    image.addEventListener('click', function() {
+        openModal(this);
+    });
+});
+

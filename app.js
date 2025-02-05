@@ -1,11 +1,13 @@
-//if(process.env.NODE_ENV !== "production"){
-  //require('dotenv').config();
-//}
+if(process.env.NODE_ENV !== "production"){
 require('dotenv').config();
+}
+//require('dotenv').config();
 
 console.log('Current Environment:', process.env.NODE_ENV);
-console.log(process.env.SECRET)
+ 
 
+
+//mongodb+srv://Walex_Gee:<db_password>@yelpcamp.ildqz.mongodb.net/?retryWrites=true&w=majority&appName=yelpcamp
 
 
 const express = require("express");
@@ -20,38 +22,45 @@ const methodOverride = require("method-override");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const User = require("./models/user");
-const helmet = require('helmet');
+
 const MongoStore = require('connect-mongo');
 
 const mongoSanitize = require('express-mongo-sanitize');
 
-const { MongoClient, ServerApiVersion } = require('mongodb'); // Add this
 
 
 const userRoutes = require("./routes/users");
 const campgroundRoutes = require("./routes/campgrounds");
 const reviewRoutes = require("./routes/reviews");
 
-const dbUrl = process.env.DB_URL || "mongodb://127.0.0.1:27017/yelpcamp";
+const dbUrl = process.env.DB_URL 
+
 
 mongoose.connect(dbUrl, {
   serverSelectionTimeoutMS: 30000,
   socketTimeoutMS: 45000,
-  family: 4
+  family: 4,
+  dbName: 'yelpcamp'
 })
-  .then(() => {
-    console.log("MongoDB Atlas connected Succssfully");
-  })
-  .catch((err) => {
-    console.log("MongoDB connection error");
-    console.log(err);
-  });
+.then(async () => {
+  console.log(`Connected to MongoDB Atlas in ${process.env.NODE_ENV} mode`);
+  console.log("Database:", mongoose.connection.name);
 
-const db = mongoose.connection;
-db.on("error", console.error.bind(console, "connection error:"));
-db.once("open", () => {
-  console.log("Database connected");
+  if(process.env.NODE_ENV !== 'production') {
+      try {
+          const Campground = require('./models/campground');
+          const campCount = await Campground.countDocuments();
+          console.log(`Number of campgrounds: ${campCount}`);
+      } catch(e) {
+          console.error('Database check error:', e);
+      }
+  }
+})
+.catch((err) => {
+  console.error("MongoDB connection error:", err);
 });
+
+const { helmetConfig } = require('./security/helmet');
 
 
 const app = express();
@@ -64,7 +73,10 @@ app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(mongoSanitize({replaceWith: '_'}));
-app.use(helmet({ contentSecurityPolicy: false }));
+
+helmetConfig(app);
+
+
 
 const secret = process.env.SESSION_SECRET || 'thisshouldbeabettersecret!';
 const store = MongoStore.create({
@@ -87,11 +99,12 @@ const sessionConfig = {
   saveUninitialized: true,
   cookie: {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",  // Only use HTTPS in production
+      secure: false,  // Only use HTTPS in production
       expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
       maxAge: 1000 * 60 * 60 * 24 * 7
   }
 };
+
 
 
 app.use(session(sessionConfig));
@@ -112,6 +125,19 @@ app.use((req, res, next) => {
   next();
 });
 
+// Redirect HTTP to HTTPS in production
+if (process.env.NODE_ENV === 'production') {
+  app.use((req, res, next) => {
+      if (req.header('x-forwarded-proto') !== 'https') {
+          res.redirect(`https://${req.header('host')}${req.url}`);
+      } else {
+          next();
+      }
+  });
+}
+
+
+
 app.use("/", userRoutes);
 app.use("/campgrounds", campgroundRoutes);
 app.use("/campgrounds/:id/reviews", reviewRoutes);
@@ -130,14 +156,15 @@ app.use((err, req, res, next) => {
   const { statusCode = 500 } = err;
   if (!err.message) err.message = "Oh No, Something Went Wrong!";
   res.status(statusCode).render("error", { err });
-  err.stack = undefined;
-
+  if (process.env.NODE_ENV !== 'production') {
+    err.stack = undefined;
+  }
 });
 
 
-const server = process.env.PORT || 3000;
-app.listen(server, () => {
-  console.log(`Serving on port ${server}`);
+const port = process.env.PORT || 3000;
+const server = app.listen(port, () => {
+  console.log(`Serving on port ${port}`);
 });
 
 // Graceful shutdown
