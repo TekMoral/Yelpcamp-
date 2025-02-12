@@ -1,38 +1,39 @@
-function checkInternetStatus() {
-    fetch("/ping", { method: "GET", cache: "no-store" })
-        .then(() => {
-            console.log("Connected to the internet");
-            hideOfflineMessage();
-        })
-        .catch(() => {
-            showOfflineMessage();
-        });
-}
 
-function showOfflineMessage() {
-    let message = document.getElementById("offline-message");
-    if (!message) {
-        message = document.createElement("div");
-        message.id = "offline-message";
-        message.textContent = "You are offline! Please check your internet connection.";
-        message.style.position = "fixed";
-        message.style.top = "10px";
-        message.style.left = "50%";
-        message.style.transform = "translateX(-50%)";
-        message.style.backgroundColor = "red";
-        message.style.color = "white";
-        message.style.padding = "10px";
-        message.style.borderRadius = "5px";
-        document.body.appendChild(message);
+// Function to check and update the internet status
+function updateInternetStatus() {
+    const statusElement = document.getElementById("internet-status");
+    const body = document.body;
+    
+    if (navigator.onLine) {
+      // When online, hide the offline message
+      statusElement.style.display = "none";
+      body.style.overflow = "auto"; // Allow scrolling when online
+    } else {
+      // When offline, show the message and prevent further actions
+      statusElement.style.display = "block";
+      body.style.overflow = "hidden"; // Disable scrolling when offline
+      statusElement.innerHTML = `
+        <div style="color: red; font-weight: bold; text-align: center;">
+          <h2>No internet</h2>
+          <p>Try:</p>
+          <ul>
+            <li>Checking the network cables, modem, and router</li>
+            <li>Reconnecting to Wi-Fi</li>
+            <li>Running Windows Network Diagnostics</li>
+          </ul>
+          <p><strong>ERR_INTERNET_DISCONNECTED</strong></p>
+        </div>
+      `;
+  
+      // Optionally, crash the page by blocking further interactions (e.g., clicks, form submissions)
+      window.location.href = "#"; // This prevents any further navigation until reconnected
     }
-}
-
-function hideOfflineMessage() {
-    const message = document.getElementById("offline-message");
-    if (message) {
-        message.remove();
-    }
-}
-
-// Check internet status every 5 seconds
-setInterval(checkInternetStatus, 5000);
+  }
+  
+  // Check if the user is online and update status
+  updateInternetStatus();
+  
+  // Listen for online and offline events to update status dynamically
+  window.addEventListener("online", updateInternetStatus);  // When user comes online
+  window.addEventListener("offline", updateInternetStatus); // When user goes offline
+  

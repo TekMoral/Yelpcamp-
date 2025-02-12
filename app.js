@@ -41,7 +41,7 @@ const dbUrl = process.env.DB_URL;
 //mongoose.connect("mongodb://localhost:27017/yelp-camp");
 mongoose.connect(dbUrl)
   .then(() => {
-    console.log("MongoDB connected");
+    console.log("MongoDB Atlas connected");
   })
   .catch((err) => {
     console.log("MongoDB connection error");
@@ -65,6 +65,9 @@ app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(mongoSanitize({replaceWith: '_'}));
 app.use(helmet({ contentSecurityPolicy: false }));
+
+app.get("/ping", (req, res) => res.sendStatus(200));
+
 
 
 const store = MongoStore.create({

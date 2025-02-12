@@ -28,6 +28,13 @@
     
 
   </head>
+
+  <div id="internet-status" style="display: none; 
+  position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); 
+  background-color: rgba(255, 255, 255, 0.8); padding: 30px; 
+  text-align: center; border: 2px solid red; z-index: 9999; max-width: 90%; width: 500px;">
+</div>
+
   <body class="d-flex flex-column min-vh-100">
     <%- include('../partials/navbar')%>
     <main class="container mt-5">
@@ -53,8 +60,7 @@
     ></script>
 
     <script src="/javascripts/validateForm.js"></script>
-
-    <script src="javascripts/internetStatus.js"></script>
+    <script src="/javascripts/internetStatus.js"></script>
 
   </body>
 </html>
