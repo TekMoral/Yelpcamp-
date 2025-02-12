@@ -1,13 +1,10 @@
 if(process.env.NODE_ENV !== "production"){
-require('dotenv').config();
+  require('dotenv').config();
 }
-//require('dotenv').config();
-
-console.log('Current Environment:', process.env.NODE_ENV);
- 
 
 
-//mongodb+srv://Walex_Gee:<db_password>@yelpcamp.ildqz.mongodb.net/?retryWrites=true&w=majority&appName=yelpcamp
+console.log(process.env.SECRET)
+
 
 
 const express = require("express");
@@ -22,46 +19,40 @@ const methodOverride = require("method-override");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const User = require("./models/user");
-
+const helmet = require('helmet');
 const MongoStore = require('connect-mongo');
 
 const mongoSanitize = require('express-mongo-sanitize');
-
 
 
 const userRoutes = require("./routes/users");
 const campgroundRoutes = require("./routes/campgrounds");
 const reviewRoutes = require("./routes/reviews");
 
-const dbUrl = process.env.DB_URL 
+//const dbUrl = process.env.DB_URL || 'mongodb://localhost:27017/yelp-camp';
 
 
-mongoose.connect(dbUrl, {
-  serverSelectionTimeoutMS: 30000,
-  socketTimeoutMS: 45000,
-  family: 4,
-  dbName: 'yelpcamp'
-})
-.then(async () => {
-  console.log(`Connected to MongoDB Atlas in ${process.env.NODE_ENV} mode`);
-  console.log("Database:", mongoose.connection.name);
+const dbUrl = process.env.DB_URL;
+//if(!dbUrl){
+  //console.log("DB_URL not set");   
+   //process.exit(1);
+//}
 
-  if(process.env.NODE_ENV !== 'production') {
-      try {
-          const Campground = require('./models/campground');
-          const campCount = await Campground.countDocuments();
-          console.log(`Number of campgrounds: ${campCount}`);
-      } catch(e) {
-          console.error('Database check error:', e);
-      }
-  }
-})
-.catch((err) => {
-  console.error("MongoDB connection error:", err);
+//mongoose.connect("mongodb://localhost:27017/yelp-camp");
+mongoose.connect(dbUrl)
+  .then(() => {
+    console.log("MongoDB connected");
+  })
+  .catch((err) => {
+    console.log("MongoDB connection error");
+    console.log(err);
+  });
+
+const db = mongoose.connection;
+db.on("error", console.error.bind(console, "connection error:"));
+db.once("open", () => {
+  console.log("Database connected");
 });
-
-const { helmetConfig } = require('./security/helmet');
-
 
 const app = express();
 
@@ -73,17 +64,14 @@ app.use(express.urlencoded({ extended: true }));
 app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(mongoSanitize({replaceWith: '_'}));
-
-helmetConfig(app);
-
+app.use(helmet({ contentSecurityPolicy: false }));
 
 
-const secret = process.env.SESSION_SECRET || 'thisshouldbeabettersecret!';
 const store = MongoStore.create({
   mongoUrl: dbUrl,
   touchAfter: 24 * 60 * 60,
   crypto: {
-      secret,
+      secret: process.env.SECRET || 'thisshouldbeabettersecret!'
   }
 });
 
@@ -94,17 +82,16 @@ store.on("error", function(e) {
 const sessionConfig = {
   store,
   name: 'session',
-  secret,
+  secret: process.env.SECRET || 'thisshouldbeabettersecret!',
   resave: false,
   saveUninitialized: true,
   cookie: {
       httpOnly: true,
-      secure: false,  // Only use HTTPS in production
+      // secure: true, // Enable in production with HTTPS
       expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
       maxAge: 1000 * 60 * 60 * 24 * 7
   }
 };
-
 
 
 app.use(session(sessionConfig));
@@ -125,19 +112,6 @@ app.use((req, res, next) => {
   next();
 });
 
-// Redirect HTTP to HTTPS in production
-if (process.env.NODE_ENV === 'production') {
-  app.use((req, res, next) => {
-      if (req.header('x-forwarded-proto') !== 'https') {
-          res.redirect(`https://${req.header('host')}${req.url}`);
-      } else {
-          next();
-      }
-  });
-}
-
-
-
 app.use("/", userRoutes);
 app.use("/campgrounds", campgroundRoutes);
 app.use("/campgrounds/:id/reviews", reviewRoutes);
@@ -156,15 +130,10 @@ app.use((err, req, res, next) => {
   const { statusCode = 500 } = err;
   if (!err.message) err.message = "Oh No, Something Went Wrong!";
   res.status(statusCode).render("error", { err });
-  if (process.env.NODE_ENV !== 'production') {
-    err.stack = undefined;
-  }
 });
 
-
-const port = process.env.PORT || 3000;
-const server = app.listen(port, () => {
-  console.log(`Serving on port ${port}`);
+app.listen(3000, () => {
+  console.log("Listening on port 3000");
 });
 
 // Graceful shutdown

@@ -1,10 +1,23 @@
+body, html {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    
+}
+
 .show-container {
     position: relative;
-    background-color: #63a3e2;
+    background-color: #91b6da;
     background-image: 
-        radial-gradient(at 47% 33%, hsl(161, 36%, 10%) 0, transparent 89%), 
-        radial-gradient(at 82% 65%, hsl(218.00, 39%, 11%) 0, transparent 55%);
-        width: 100%;
+        radial-gradient(at 47% 33%, hsl(154, 6%, 76%) 0, transparent 89%), 
+        radial-gradient(at 82% 65%, hsl(218, 86%, 75%) 0, transparent 55%);
+        width: 100;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        left: 0;
+        right: 0;
 }
 
 /* Dark mode */
@@ -13,6 +26,13 @@
         background-color: #212529;
         background-image: 
             radial-gradient(at 47% 33%, hsl(162.00, 77%, 40%) 0, transparent 59%), 
-            radial-gradient(at 82% 65%, hsl(218.00, 39%, 11%) 0, transparent 55%);
+            radial-gradient(at 82% 65%, hsl(223, 15%, 82%) 0, transparent 55%);
     }
+}
+
+#map {
+    height: 400px;  /* Increase this value to make it taller */
+    width: 100%;    /* This ensures it takes full width of its container */
+    margin-bottom: 20px; /* Adds some space between the map and carousel */
+    border: 5px solid darkblue;
 }
