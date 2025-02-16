@@ -1,28 +1,39 @@
+require('dotenv').config();
 const mongoose = require("mongoose");
 const cities = require("./cities");
 const { places, descriptors } = require("./seedHelpers");
 const Campground = require("../models/campground");
 
-mongoose.connect("mongodb://localhost:27017/yelp-camp");
 
-const db = mongoose.connection;
-db.on("error", console.error.bind(console, "connection error:"));
-db.once("open", () => {
-  console.log("Database connected");
-});
+const dbUrl = process.env.DB_URL;
 
-const sample = array => array[Math.floor(Math.random() * array.length)]
+// Make the connection async
+const connectDB = async () => {
+  try {
+    await mongoose.connect(dbUrl);
+    console.log("Database connected for seeding");
+  } catch (err) {
+    console.log("Seeding connection error:");
+    console.log(err);
+    process.exit(1);
+  }
+};
+
+const sample = array => array[Math.floor(Math.random() * array.length)];
 
 const seedDB = async () => {
-  await Campground.deleteMany({});
-  for (let i = 0; i < 400; i++) {
-    const random1000 = Math.floor(Math.random() * 1000);
-    const camp = new Campground({
-      author: "679054329261023be8650cf6",
+  try {
+    await connectDB(); // Connect first
+    await Campground.deleteMany({}); // Then perform operations
+    
+    for (let i = 0; i < 100; i++) {
+      const random1000 = Math.floor(Math.random() * 1000);
+      const camp = new Campground({
+        author: "679054329261023be8650cf6",
         location: `${cities[random1000].city}, ${cities[random1000].state}`,
         title: `${sample(descriptors)} ${sample(places)}`,
-        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed euismod, nisl vel ultricies tincidunt, nunc nisl aliquet nunc, eget aliquam nunc nisl eu nunc. Sed euismod, nisl vel ultricies tincidunt, nunc nisl aliquet nunc, eget aliquam nunc nisl eu nunc.",
-        price: Math.floor(Math.random() * 20) + 10, // Add a random price between 10-30
+        description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit...",
+        price: Math.floor(Math.random() * 20) + 10,
         geometry: {
           type: "Point",
           coordinates: [
@@ -30,27 +41,32 @@ const seedDB = async () => {
             cities[random1000].latitude,
           ]
         },
-
         images: [
           {
-            url: 'https://res.cloudinary.com/dfger19r7/image/upload/v1734929776/samples/landscapes/nature-mountains.jpg',
-            filename: 'YelpCamp/dvrq3ptegqnsfnq742jn',
+            url: 'https://res.cloudinary.com/dfger19r7/image/upload/v1738818550/istockphoto-2161607196-612x612_fppoos.webp',
+            filename: 'YelpCamp/istockphoto-2161607196-612x612',
           },
           {
-            url: 'https://res.cloudinary.com/dfger19r7/image/upload/v1735279588/YelpCamp/ylhtrj9gkfvko4djcs3k.png',
-            filename: 'YelpCamp/ylhtrj9gkfvko4djcs3k',
+            url: 'https://res.cloudinary.com/dfger19r7/image/upload/v1738818551/istockphoto-1652579362-2048x2048_xuqa9a.jpg',
+            filename: 'YelpCamp/istockphoto-1652579362-2048x2048',
           },
           {
-            url: 'https://res.cloudinary.com/dfger19r7/image/upload/v1735279589/YelpCamp/c9fpigxgdii1yfrnzte7.png',
-            filename: 'YelpCamp/c9fpigxgdii1yfrnzte7',
-          }
+            url: 'https://res.cloudinary.com/dfger19r7/image/upload/v1738818550/istockphoto-1668284320-612x612_y1oree.webp',
+            filename: 'YelpCamp/istockphoto-1668284320-612x612',
+          },
         ]
-    })
-    await camp.save();
+      });
+      await camp.save();
+    }
+    console.log("Database seeded!");
+  } catch (err) {
+    console.log("Seeding error:");
+    console.log(err);
+  } finally {
+    await mongoose.connection.close();
   }
 };
 
-
 seedDB().then(() => {
-  mongoose.connection.close();
+  console.log("Seeding complete, connection closed");
 });

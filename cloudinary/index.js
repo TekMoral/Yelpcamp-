@@ -11,20 +11,11 @@ const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: {
     folder: "YelpCamp",
-    allowedFormats: ["jpeg", "png", "jpg", "mp4", "mov", "avi"],
+    allowedFormats: ["jpeg", "png", "jpg", "mp4", "mov", "webp"],
     resource_type: "auto",
     transformation: [
-      // Image transformations
-      { width: 2000, height: 1500, crop: 'scale', quality: 'auto:best' },
-      // Video transformations
-      { 
-        width: 1280,
-        height: 720,
-        crop: "scale",
-        quality: "auto:best",
-        video_codec: "auto",
-        format: "mp4"
-      }
+      { width: 2000, height: 1000, crop: 'fill'},
+      {quality: 'auto:best'},
     ]
   }
 });

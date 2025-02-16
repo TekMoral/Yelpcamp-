@@ -1,15 +1,14 @@
-<% try { %>
-    <% if(locals.success && locals.success.length) { %>
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            <%= success %>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    <% } %>
+<% if(success && success.length) { %>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <%= success %>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+<% } %>
 
-    <% if(locals.error && locals.error.length) { %>
-        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-            <%= error %>
-            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-        </div>
-    <% } %>
-<% } catch(e) { /* Silently fail if flash messages are unavailable */ } %>
+<% if(error && error.length) { %>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <%= error %>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+<% } %>
+

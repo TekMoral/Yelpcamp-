@@ -1,66 +1,91 @@
 <% layout('layouts/boilerplate') %>
-
 <div class="row">
     <h1 class="text-center">Edit Campground</h1>
     <div class="col-md-6 offset-md-3">
-        <form action="/campgrounds/<%= campground._id%>?_method=PUT" method="POST" novalidate class="validated-form" enctype="multipart/form-data">
+        <form action="/campgrounds/<%= campground._id %>?_method=PUT" method="POST" novalidate class="validated-form" enctype="multipart/form-data">
             <div class="mb-3">
                 <label class="form-label" for="title">Title</label>
-                <input class="form-control" type="text" id="title" name="campground[title]" 
-                       value="<%= campground.title %>" required>
-                <div class="invalid-feedback">
-                    Title is required
-                </div>
+                <input class="form-control <%= errors?.title ? 'is-invalid' : '' %>" 
+                       type="text" 
+                       id="title" 
+                       name="campground[title]" 
+                       value="<%= campground.title %>" 
+                       required>
+                <% if (errors?.title) { %>
+                    <div class="invalid-feedback">
+                        <%= errors.title %>  
+                    </div>
+                <% } %>
             </div>
 
             <div class="mb-3">
                 <label class="form-label" for="location">Location</label>
-                <input class="form-control" type="text" id="location" name="campground[location]" 
-                       value="<%= campground.location%>" required>
-                <div class="invalid-feedback">
-                    Location is required
-                </div>
+                <input class="form-control <%= errors?.location ? 'is-invalid' : '' %>" 
+                       type="text" 
+                       id="location" 
+                       name="campground[location]" 
+                       value="<%= campground.location %>" 
+                       required>
+                <% if (errors?.location) { %>
+                    <div class="invalid-feedback">
+                        <%= errors.location %> 
+                    </div>
+                <% } %>
             </div>
 
             <div class="mb-3">
                 <label class="form-label" for="price">Campground Price</label>
                 <div class="input-group">
                     <span class="input-group-text" id="price-label">$</span>
-                    <input type="number" class="form-control" id="price" 
-                           placeholder="0.00" aria-label="price" 
-                           aria-describedby="price-label"
+                    <input type="text" 
+                           class="form-control <%= errors?.price ? 'is-invalid' : '' %>" 
+                           id="price" 
+                           placeholder="0.00" 
                            name="campground[price]" 
                            value="<%= campground.price %>" 
-                           required min="0">
-                    <div class="invalid-feedback">
-                        Price must be 0 or greater
-                    </div>
+                           required>
+                    <% if (errors?.price) { %>
+                        <div class="invalid-feedback">
+                            <%= errors.price %> 
+                        </div>
+                    <% } %>
                 </div>
             </div>
 
             <div class="mb-3">
                 <label class="form-label" for="description">Description</label>
-                <textarea class="form-control" type="text" id="description" 
-                          name="campground[description]" required><%= campground.description%></textarea>
-                <div class="invalid-feedback">
-                    Description is required
-                </div>
+                <textarea class="form-control <%= errors?.description ? 'is-invalid' : '' %>" 
+                          id="description" 
+                          name="campground[description]" 
+                          required><%= campground.description %></textarea>
+                <% if (errors?.description) { %>
+                    <div class="invalid-feedback">
+                        <%= errors.description %> 
+                    </div>
+                <% } %>
             </div>
 
             <div class="mb-3">
-                <label class="form-label" for="image">Add Images</label>
-                <input type="file" class="form-control" id="image" name="image" multiple>
-                <!-- multiple is correct here since it's a file input -->
+                <label for="image" class="form-label">Add Images</label>
+                <input class="form-control <%= errors?.images ? 'is-invalid' : '' %>" 
+                       type="file" 
+                       id="image" 
+                       name="image" 
+                       multiple>
+                <% if (errors?.images) { %>
+                    <div class="invalid-feedback">
+                        <%= errors.images %> 
+                    </div>
+                <% } %>
             </div>
 
             <div class="mb-3">
                 <% campground.images.forEach(function(img, i) { %>
-                    <img src="<%=img.thumbnail %>" class="img-thumbnail" alt="">
-                    <div class="form-check-inline">
-                        <input type="checkbox" id="image-<%=i%>" name="deleteImages[]" 
-                               value="<%=img.filename%>">
-                        <label for="image-<%=i%>">Delete?</label>
-                    </div>
+                <img src="<%= img.thumbnail %>" class="img-thumbnail" alt="">
+                <div class="form-check-inline">
+                    <input type="checkbox" id="image-<%= i %>" name="deleteImages[]" value="<%= img.filename %>">
+                    <label for="image-<%= i %>">Delete?</label>
+                </div>
                 <% }) %>
             </div>
 
@@ -68,6 +93,6 @@
                 <button class="btn btn-info">Update Campground</button>
             </div>
         </form>
-        <a href="/campgrounds/<%= campground._id%>">Back to Campground</a>
+        <a href="/campgrounds/<%= campground._id %>">Back To Campground</a>
     </div>
 </div>

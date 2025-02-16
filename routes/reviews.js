@@ -1,13 +1,9 @@
 const express = require("express");
 const router = express.Router({ mergeParams: true });
-const { validateReview, isLoggedIn } = require("../middleware");
-
-const Campground = require("../models/campground");
-const Review = require("../models/review");
+const { validateReview, isLoggedIn, isReviewAuthor } = require("../middleware");
 const reviews = require("../controllers/reviews");
- // Changed this line
+const catchAsync = require('../utils/catchAsync');
 
-const catchAsync = require("../utils/catchAsync");
 const ExpressError = require("../utils/ExpressError");
 
 
@@ -19,7 +15,6 @@ router.post(
 
 router.delete(
   "/:reviewId",
-  isLoggedIn,
-  catchAsync(reviews.deleteReview));
+  isLoggedIn, isReviewAuthor, catchAsync(reviews.deleteReview));
 
 module.exports = router;

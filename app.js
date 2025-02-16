@@ -46,6 +46,7 @@ mongoose.connect(dbUrl)
   .catch((err) => {
     console.log("MongoDB connection error");
     console.log(err);
+    process.exit(1);
   });
 
 const db = mongoose.connection;
@@ -61,6 +62,7 @@ app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
 
 app.use(express.urlencoded({ extended: true }));
+app.use(express.json()); 
 app.use(methodOverride("_method"));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(mongoSanitize({replaceWith: '_'}));
@@ -91,8 +93,8 @@ const sessionConfig = {
   cookie: {
       httpOnly: true,
       // secure: true, // Enable in production with HTTPS
-      expires: Date.now() + 1000 * 60 * 60 * 24 * 7,
-      maxAge: 1000 * 60 * 60 * 24 * 7
+      expires: Date.now() + 1000 * 60 * 15,
+      maxAge: 1000 * 60 * 15
   }
 };
 

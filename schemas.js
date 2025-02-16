@@ -31,16 +31,16 @@ module.exports.campgroundSchema = Joi.object({
     location: Joi.string().required().escapeHTML(),
     description: Joi.string().required().escapeHTML(),
     video: Joi.object({
-      url: Joi.string().allow('', null),
+      url: Joi.string().uri().allow('', null),
       filename: Joi.string().allow('', null)
-    }).allow(null)
+    }).default(null)
   }).required(),
-  deleteImages: Joi.array()
+  deleteImages: Joi.array().items(Joi.string().escapeHTML()).default([])
 });
 
 module.exports.reviewSchema = Joi.object({
   review: Joi.object({
     rating: Joi.number().required().min(1).max(5),
-    body: Joi.string().required().escapeHTML()
+    body: Joi.string().trim().min(1).required().escapeHTML().max(500)
   }).required()
 });
