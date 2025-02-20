@@ -266,44 +266,44 @@
           </form>
           <% } %>
 
-          <!-- Review Cards -->
-          <% for(let review of campground.reviews) { %>
-          <div
-            class="card mb-3 glass-card"
-            style="
-              background-color: hsl(180, 2%, 83%);
-              border: 1px solid #433506;
-              margin-right: 20px;
-            "
-          >
-            <div class="card-body">
-              <h5 class="card-title">
-                <%= review.author ? review.author.username : 'Unknown' %>
-                <small class="text-muted" style="font-size: 0.8rem">
-                  - <%= new Date(review.createdAt).toLocaleDateString("en-US", {
-                  year: 'numeric', month: 'short', day: 'numeric' }) %>
-                </small>
-              </h5>
-              <p class="starability-result" data-rating="<%= review.rating %>">
-                Rated: <%= review.rating %> stars
-              </p>
-              <p class="card-text">Review: <%= review.body %></p>
 
-              <% if (currentUser && review.author && String(review.author._id)
-              === String(currentUser._id)) { %>
-              <button
-                class="btn btn-sm btn-danger delete-review-btn"
-                data-campground-id="<%= campground._id %>"
-                data-review-id="<%= review._id %>"
-                data-bs-toggle="modal"
-                data-bs-target="#deleteReviewModal"
-              >
-                Delete
-              </button>
-              <% } %>
+          <!-- Review Cards -->
+        
+          <div class="reviews-section">
+    <% if (campground.reviews && campground.reviews.length > 0) { %>
+        <% for(let review of campground.reviews) { %>
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <%= review.author ? review.author.username : 'Unknown' %>
+                        <small class="text-muted" style="font-size: 0.8rem">
+                            - <%= new Date(review.createdAt).toLocaleDateString("en-US", { year: 'numeric', month: 'short', day: 'numeric' }) %>
+                        </small>
+                    </h5>
+                    <p class="starability-result" data-rating="<%= review.rating %>">
+                        Rated: <%= review.rating %> stars
+                    </p>
+                    <p class="card-text">Review: <%= review.body %></p>
+
+                    <% if (currentUser && review.author && String(review.author._id) === String(currentUser._id)) { %>
+                        <button class="btn btn-sm btn-danger delete-review-btn"
+                            data-campground-id="<%= campground._id %>"
+                            data-review-id="<%= review._id %>"
+                            data-bs-toggle="modal"
+                            data-bs-target="#deleteReviewModal">
+                            Delete
+                        </button>
+                    <% } %>
+                </div>
             </div>
-          </div>
-          <% } %>
+        <% } %>
+    <% } else { %>
+        <p class="text-muted text-center">No reviews yet. Be the first to leave one!</p>
+    <% } %>
+</div>
+
+
+          
         </div>
       </div>
     </div>
