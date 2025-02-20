@@ -1,0 +1,31 @@
+/* Apply background image */
+body {
+    background: url('https://res.cloudinary.com/dfger19r7/image/upload/v1739929852/787593-tent-wallpaper-top-free-tent-background_urfqg0.jpg') no-repeat center center/cover;
+    height: 100vh;
+    display: flex;
+
+}
+
+/* Card styling */
+.card {
+    width: 400px;
+    background: rgba(190, 185, 185, 0.8); /* Slight transparency */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    min-height: 300px;
+}
+
+/* Form field styles */
+.form-control {
+    border-radius: 10px;
+    font-size: 16px;
+    -webkit-border-radius: 10px;
+    -moz-border-radius: 10px;
+    -ms-border-radius: 10px;
+    -o-border-radius: 10px;
+}
+
+.btn-success {
+    width: 35%;
+}

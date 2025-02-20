@@ -1,0 +1,8 @@
+body {
+    background: url('https://res.cloudinary.com/dfger19r7/image/upload/v1739949689/bbbb5_axz6u3.webp') no-repeat center center/cover;;
+    min-height: 100vh;
+    display: block;
+    justify-content: center;
+    font-family: 'Poppins', sans-serif;
+    overflow: hidden;
+}

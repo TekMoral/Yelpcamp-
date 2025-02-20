@@ -7,7 +7,7 @@ const Joi = require('joi');
 
 // Index Route
 module.exports.index = async (req, res) => {
-    const campgrounds = await Campground.find({});
+    const campgrounds = await Campground.find({}).sort({ createdAt: -1});
     res.render("campgrounds/index", { campgrounds });
 };
 
@@ -55,6 +55,7 @@ module.exports.showCampground = async (req, res) => {
         const campground = await Campground.findById(req.params.id)
             .populate({
                 path: "reviews",
+                options: { sort: { createdAt: -1 } },
                 populate: { path: "author" }
             })
             .populate("author");
@@ -185,7 +186,7 @@ module.exports.index = async (req, res) => {
     }
 
     try {
-        const campgrounds = await Campground.find(query);
+        const campgrounds = await Campground.find(query).sort({ createdAt: -1});
         if (req.query.search && campgrounds.length === 0) {
             req.flash("error", `No campgrounds found matching '${req.query.search}'`);
             return res.redirect("/campgrounds");

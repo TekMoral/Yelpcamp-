@@ -1,0 +1,70 @@
+body {
+    background: url(https://res.cloudinary.com/dfger19r7/image/upload/v1740046112/New2_mm5c0p.avif) no-repeat center top 5% / cover;;
+}
+
+/* Center the form on the page */
+.col-6 {
+    background-color: #f8f9fa; /* Light gray background */
+    padding: 20px;
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1); /* Soft shadow */
+}
+
+/* Style the form labels */
+.form-label {
+    font-weight: bold;
+    font-size: 1.1rem;
+    color: #333; /* Dark gray text */
+}
+
+/* Style the input fields */
+.form-control {
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    padding: 10px;
+    font-size: 1rem;
+}
+
+/* Focus effect on input fields */
+.form-control:focus {
+    border-color: #28a745; /* Green border when focused */
+    box-shadow: 0px 0px 5px rgba(40, 167, 69, 0.5);
+}
+
+/* Style the button */
+.btn-success {
+    background-color: #28a745; /* Green color */
+    border: none;
+    padding: 10px 15px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background 0.3s ease-in-out;
+}
+
+.btn-success:hover {
+    background-color: #218838; /* Darker green on hover */
+}
+
+/* Style the title */
+h1.text-center {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #dfd878; /* Blue color */
+    margin-bottom: 20px;
+}
+
+/* Style the "All Campgrounds" link */
+a {
+    display: block;
+    text-align: center;
+    color: #a7b362;
+    font-weight: bold;
+    margin-top: 15px;
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+

@@ -1,16 +1,18 @@
 mapboxgl.accessToken = mapToken;
+
 const map = new mapboxgl.Map({
     container: "cluster-map",
     style: "mapbox://styles/mapbox/navigation-night-v1",
     center: [0, 0],
-    zoom: 1,
+    zoom: 2,
     projection: 'globe',
     renderWorldCopies: true
 }).addControl(new mapboxgl.NavigationControl(), "top-right");
 
+// Ensure the map container doesn't have unnecessary margins
 document.getElementById('cluster-map').style.marginBottom = '0';
 
-// Add atmosphere and terrain effects for globe
+// Add atmosphere and terrain effects for a globe-like appearance
 map.on('style.load', () => {
     map.setFog({
         'color': 'rgb(186, 210, 235)',
@@ -21,10 +23,25 @@ map.on('style.load', () => {
     });
 });
 
+// Convert the campgrounds data to GeoJSON format
+const geojsonData = {
+    type: "FeatureCollection",
+    features: campgrounds.features.map(campground => ({
+        type: "Feature",
+        properties: {
+            popUpMarkup: `<strong><a href="/campgrounds/${campground._id}">${campground.title}</a></strong><p>${campground.location}</p>`,
+        },
+        geometry: {
+            type: "Point",
+            coordinates: campground.geometry.coordinates // Ensure this exists in your database
+        }
+    }))
+};
+
 map.on("load", () => {
     map.addSource("campgrounds", {
         type: "geojson",
-        data: campgrounds,
+        data: geojsonData,
         cluster: true,
         clusterMaxZoom: 14,
         clusterRadius: 50,
@@ -39,11 +56,11 @@ map.on("load", () => {
             "circle-color": [
                 "step",
                 ["get", "point_count"],
-                "#03A9f4",
+                "#03A9F4",
                 10,
-                "#2196f3",
+                "#2196F3",
                 40,
-                "#3f51b5",
+                "#3F51B5"
             ],
             "circle-radius": ["step", ["get", "point_count"], 15, 10, 20, 30, 25],
         },
@@ -68,29 +85,29 @@ map.on("load", () => {
         filter: ["!", ["has", "point_count"]],
         paint: {
             "circle-color": "#11b4da",
-            "circle-radius": 20,
+            "circle-radius": 8,
             "circle-stroke-width": 2,
-            "circle-stroke-color": "#fff"
+            "circle-stroke-color": "#fff",
         },
     });
 
+    // Zoom in when clicking a cluster
     map.on("click", "clusters", (e) => {
         const features = map.queryRenderedFeatures(e.point, {
             layers: ["clusters"],
         });
         const clusterId = features[0].properties.cluster_id;
-        map
-            .getSource("campgrounds")
-            .getClusterExpansionZoom(clusterId, (err, zoom) => {
-                if (err) return;
+        map.getSource("campgrounds").getClusterExpansionZoom(clusterId, (err, zoom) => {
+            if (err) return;
 
-                map.easeTo({
-                    center: features[0].geometry.coordinates,
-                    zoom: zoom,
-                });
+            map.easeTo({
+                center: features[0].geometry.coordinates,
+                zoom: zoom,
             });
+        });
     });
 
+    // Show popup for individual campground
     map.on("click", "unclustered-point", (e) => {
         const coordinates = e.features[0].geometry.coordinates.slice();
         const text = e.features[0].properties.popUpMarkup;

@@ -3,7 +3,7 @@
   style="margin-bottom: 0 !important"
 >
   <div class="container-fluid">
-    <a class="navbar-brand" href="#">Yelpcamp</a>
+    <a class="navbar-brand" href="#">FractalCamp</a>
     <button
       class="navbar-toggler"
       type="button"
@@ -25,7 +25,10 @@
       <div class="navbar-nav ms-auto">
         <% try { %> <% if(typeof currentUser !== 'undefined' && currentUser) {
         %>
-        <a class="nav-link" href="/logout">Logout</a>
+
+        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal">Logout</a>
+
+
         <% } else { %>
         <a class="nav-link" href="/login">Login</a>
         <a class="nav-link" href="/register">Register</a>
@@ -49,7 +52,7 @@
   <div class="modal-dialog">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="logoutModalLabel">Confirm Logout</h5>
+        <h3 class="modal-title" id="logoutModalLabel">Confirm Logout!!</h3>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <div class="modal-body">
@@ -65,3 +68,8 @@
 
 
 
+<script>
+document.getElementById('confirmLogout').addEventListener('click', function() {
+    window.location.href = '/logout';
+});
+</script>

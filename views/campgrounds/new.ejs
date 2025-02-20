@@ -3,7 +3,7 @@
     <h1 class="text-center">New Campground</h1>
     <div class="col-6 offset-3">
 
-
+<link rel="stylesheet" href="/stylesheets/newForm.css">
         <form action="/campgrounds" method="POST" novalidate class="validated-form" enctype="multipart/form-data">
             <div class="mb-3">
                 <label class="form-label" for="title">Title</label>
@@ -11,7 +11,7 @@
                 <% if (error.title) { %>
                     <div class="invalid-feedback"><%= error.title %></div>
                 <% } %>
-                <div class="valid-feedback"> Looks good!</div>
+                <div class="invalid-feedback">Title is Required</div>
             </div>
             <div class="mb-3">
                 <label class="form-label" for="location">Location</label>
@@ -19,22 +19,37 @@
                 <% if (error.location) { %>
                     <div class="invalid-feedback"><%= error.location %></div>
                 <% } %>
+                <div class="invalid-feedback">Location is Required</div>
     
             </div>
             
-    
-             <div class="mb-3">
-                <label class="form-label" for="image">Campground Price</label>
-            <div class="input-group ">
-                <span class="input-group-text" id="price-label">$</span>
-                <input type="number" class="form-control" id="price" placeholder="0.00" aria-label="price" aria-describedby="price-label"
-                name="campground[price]" required min="0" step="o.o1" onward="return event.keycode !==189">
-              </div>
-              <% if (error.price) { %>
-                <div class="invalid-feedback"><%= error.price %></div>
-            <% } %>
-
+            <div class="mb-3">
+                <label class="form-label" for="price">Campground Price</label>
+                <div class="input-group has-validation">
+                    <span class="input-group-text" id="price-label">$</span>
+                    <input 
+                        type="number" 
+                        class="form-control" 
+                        id="price" 
+                        placeholder="0.00" 
+                        aria-label="price" 
+                        aria-describedby="price-label"
+                        name="campground[price]" 
+                        required 
+                        min="0" 
+                        step="0.01"
+                        onkeydown="return event.keyCode !== 189"
+                    >
+                    <div class="invalid-feedback">
+                        <% if (error && error.price) { %>
+                            <%= error.price %>
+                        <% } else { %>
+                            Price is Required
+                        <% } %>
+                    </div>
+                </div>
             </div>
+            
 
             <div class="mb-3">
                 <label class="form-label" for="location">Description</label>

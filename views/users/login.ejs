@@ -1,11 +1,11 @@
 <% layout('layouts/boilerplate')%>
 
+<link rel="stylesheet" href="/stylesheets/login.css">
+
 <div class="container d-flex justify-content-center align-items-center mt-5">
     <div class="row">
         <div class="col-md-12 offset-md-1 col-xl-6 offset-xl-3">
             <div class="card shadow">
-                <img src="https://images.unsplash.com/photo-1571863533956-01c88e79957e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1267&q=80"
-                    alt="" class="card-img-top" />
                 <div class="card-body">
                     <h5 class="card-title">Login</h5>
                     <form action="/login" method="POST" class="validated-form" novalidate>
@@ -15,6 +15,7 @@
                             <div class="valid-feedback">
                                 Looks good!
                             </div>
+                            <div class="invalid-feedback">Username is Required</div>
                         </div>
 
                         <div class="mb-3">
@@ -23,6 +24,7 @@
                             <div class="valid-feedback">
                                 Looks good!
                             </div>
+                            <div class="invalid-feedback">Password is required</div>
                         </div>
                         <button class="btn btn-success btn-block">Login</button>
                     </form>

@@ -3,11 +3,10 @@ const mongoose = require("mongoose");
 const cities = require("./cities");
 const { places, descriptors } = require("./seedHelpers");
 const Campground = require("../models/campground");
-
+const seedImages = require("./seedImages");
 
 const dbUrl = process.env.DB_URL;
 
-// Make the connection async
 const connectDB = async () => {
   try {
     await mongoose.connect(dbUrl);
@@ -21,12 +20,25 @@ const connectDB = async () => {
 
 const sample = array => array[Math.floor(Math.random() * array.length)];
 
+// Function to get 3 random images from the seedImages array
+const getRandomImages = () => {
+  let images = [...seedImages];
+  let results = [];
+  for (let i = 0; i < 3; i++) {
+    const randomIndex = Math.floor(Math.random() * images.length);
+    results.push(images[randomIndex]);
+    // Remove the selected image to avoid duplicates
+    images.splice(randomIndex, 1);
+  }
+  return results;
+};
+
 const seedDB = async () => {
   try {
-    await connectDB(); // Connect first
-    await Campground.deleteMany({}); // Then perform operations
+    await connectDB();
+    await Campground.deleteMany({});
     
-    for (let i = 0; i < 100; i++) {
+    for (let i = 0; i < 75; i++) {
       const random1000 = Math.floor(Math.random() * 1000);
       const camp = new Campground({
         author: "679054329261023be8650cf6",
@@ -41,20 +53,7 @@ const seedDB = async () => {
             cities[random1000].latitude,
           ]
         },
-        images: [
-          {
-            url: 'https://res.cloudinary.com/dfger19r7/image/upload/v1738818550/istockphoto-2161607196-612x612_fppoos.webp',
-            filename: 'YelpCamp/istockphoto-2161607196-612x612',
-          },
-          {
-            url: 'https://res.cloudinary.com/dfger19r7/image/upload/v1738818551/istockphoto-1652579362-2048x2048_xuqa9a.jpg',
-            filename: 'YelpCamp/istockphoto-1652579362-2048x2048',
-          },
-          {
-            url: 'https://res.cloudinary.com/dfger19r7/image/upload/v1738818550/istockphoto-1668284320-612x612_y1oree.webp',
-            filename: 'YelpCamp/istockphoto-1668284320-612x612',
-          },
-        ]
+        images: getRandomImages()
       });
       await camp.save();
     }
