@@ -114,7 +114,7 @@ const sessionConfig = {
   resave: false,
   saveUninitialized: process.env.NODE_ENV !== "production",
   cookie: {
-    secure: process.env.NODE_ENV === "production",
+    secure: false,
     httpOnly: true,
     sameSite: "strict",
     expires: Date.now() + 1000 * 60 * 60 * 12,
