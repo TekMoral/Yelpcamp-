@@ -94,12 +94,7 @@ app.use(
   })
 );
 
-app.use((req, res, next) => {
-  if (process.env.NODE_ENV === "production" && req.headers["x-forwarded-proto"] !== "https") {
-    return res.redirect("https://" + req.headers.host + req.url);
-  }
-  next();
-});
+
 
 
 
@@ -120,7 +115,7 @@ const sessionConfig = {
   resave: false,
   saveUninitialized: process.env.NODE_ENV !== "production",
   cookie: {
-    secure: process.env.NODE_ENV === "production",
+    secure: process.env.NODE_ENV === "production" && req.headers["x-forwarded-proto"] === "https",
     httpOnly: true,
     sameSite: "strict",
     expires: Date.now() + 1000 * 60 * 60 * 12,
