@@ -103,7 +103,7 @@ const store = MongoStore.create({
   touchAfter: 24 * 60 * 60,
   crypto: {
     secret: process.env.SECRET
-  }
+  },
 });
 
 store.on("error", (e) => console.log("SESSION STORE ERROR", e));
@@ -115,7 +115,7 @@ const sessionConfig = {
   resave: false,
   saveUninitialized: process.env.NODE_ENV !== "production",
   cookie: {
-    secure: process.env.NODE_ENV === "production" && req.headers["x-forwarded-proto"] === "https",
+    secure: process.env.NODE_ENV === "production",
     httpOnly: true,
     sameSite: "strict",
     expires: Date.now() + 1000 * 60 * 60 * 12,
@@ -138,6 +138,12 @@ app.use((req, res, next) => {
   next();
 });
 
+app.use((req, res, next) => {
+  console.log("Session Data:", req.session);
+  console.log("Current User:", req.user);  // Check if user is stored
+  next();
+});
+
 app.use("/", userRoutes);
 app.use("/campgrounds", campgroundRoutes);
 app.use("/campgrounds/:id/reviews", reviewRoutes);
@@ -157,6 +163,7 @@ app.use((err, req, res, next) => {
       stack: process.env.NODE_ENV === 'development' ? err.stack : null
   });
 });
+
 
 
 
