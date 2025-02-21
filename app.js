@@ -7,6 +7,7 @@ const path = require("path");
 const mongoose = require("mongoose");
 const crypto = require('crypto');
 const ejsMate = require("ejs-mate");
+const ExpressError = require('./utils/ExpressError');
 const session = require("express-session");
 const flash = require("connect-flash");
 const methodOverride = require("method-override");
@@ -24,12 +25,18 @@ const reviewRoutes = require("./routes/reviews");
 
 const dbUrl = process.env.DB_URL || "mongodb://localhost:27017/yelpcamp";
 
-mongoose.connect(dbUrl)
-  .then(() => console.log("MongoDB Atlas connected"))
-  .catch((err) => {
-    console.error("MongoDB connection error:", err);
-    process.exit(1);
-  });
+mongoose.connect(dbUrl, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+})
+.then(() => {
+  console.log("MongoDB Atlas connected");
+})
+.catch((err) => {
+  console.error("MongoDB connection error:", err);
+  process.exit(1);
+});
+
 
 const app = express();
 app.engine("ejs", ejsMate);
@@ -95,7 +102,9 @@ app.use(
 );
 
 
-
+if (process.env.NODE_ENV === "production") {
+  app.set('trust proxy', 1); // trust first proxy - required for Render
+}
 
 
 const store = MongoStore.create({
@@ -117,7 +126,7 @@ const sessionConfig = {
   cookie: {
     secure: process.env.NODE_ENV === "production",
     httpOnly: true,
-    sameSite: "lax",
+    sameSite: process.env.NODE_ENV === "production" ? 'none' : 'lax',
     expires: Date.now() + 1000 * 60 * 60 * 12,
     maxAge: 1000 * 60 * 60 * 12
   }
@@ -137,6 +146,7 @@ app.use((req, res, next) => {
   res.locals.error = req.flash("error");
   next();
 });
+
 
 app.use((req, res, next) => {
   console.log("Session Data:", req.session);
