@@ -1,115 +1,59 @@
+/* Sticky Search Bar */
 .sticky-search {
     position: sticky;
-    top: 0;
-    background: rgba(40, 86, 132, 0.95);
-    backdrop-filter: blur(8px);
-    padding: 1rem 0;
-    box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
-    z-index: 1000;
+    top: 50px;
+    left: 0;
+    width: 100%;
+    background: rgba(255, 255, 255, 0.9); /* Light background with slight transparency */
+    padding: 10px 0;
+    z-index: 1000; /* Ensures it stays above other elements */
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1); /* Adds a subtle shadow */
 }
 
+/* Make the form a flex container */
 .search-form {
     display: flex;
-    gap: 1rem;
     align-items: center;
-    max-width: 800px;
-    margin: 0 auto;
-}
-
-.search-wrapper {
-    flex-grow: 1;
-    position: relative;
-    display: flex;
-    align-items: center;
-}
-
-.search-icon {
-    position: absolute;
-    left: 1rem;
-    color: #6c757d;
-}
-
-.clear-input {
-    position: absolute;
-    right: 1rem;
-    color: #6c757d;
-    cursor: pointer;
-    transition: color 0.3s ease;
-}
-
-.clear-input:hover {
-    color: #dc3545;
-}
-
-.search-input {
+    justify-content: center; /* Centers items */
+    gap: 10px;
     width: 100%;
-    padding: 0.8rem 2.5rem;
-    border: none;
-    border-radius: 50px;
-    background: rgba(255, 255, 255, 0.1);
-    color: white;
+    max-width: 800px; /* Adjust as needed */
+    margin: auto;
+}
+
+/* Input field should expand */
+.search-input {
+    flex: 1;
+    padding: 10px;
     font-size: 1rem;
-    transition: all 0.3s ease;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    min-width: 200px;
 }
 
-.search-input::placeholder {
-    color: rgba(255, 255, 255, 0.6);
-}
-
-.search-input:focus {
-    outline: none;
-    background: rgba(255, 255, 255, 0.15);
-    box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.2);
-}
-
-.button-group {
-    display: flex;
-    gap: 0.5rem;
-}
-
-.search-button, .clear-button {
+/* Search button */
+.search-button {
+    background: #29ad48;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    font-size: 1rem;
+    cursor: pointer;
+    border-radius: 5px;
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-    padding: 0.8rem 1.5rem;
-    border: none;
-    border-radius: 50px;
-    font-weight: 500;
-    transition: all 0.3s ease;
-    text-decoration: none;
+    gap: 8px;
+    white-space: nowrap;
 }
 
-.search-button {
-    background: #2ecc71;
-    color: white;
-}
-
-.search-button:hover {
-    background: #27ae60;
-    transform: translateY(-1px);
-}
-
+/* Clear button */
 .clear-button {
-    background: rgba(23, 54, 192, 0.1);
+    padding: 10px 15px;
+    text-decoration: none;
     color: white;
-}
-
-.clear-button:hover {
-    background: rgba(23, 59, 237, 0.2);
-    transform: translateY(-1px);
-}
-
-@media (max-width: 576px) {
-    .search-form {
-        flex-direction: column;
-    }
-    
-    .button-group {
-        width: 100%;
-    }
-    
-    .search-button, .clear-button {
-        flex: 1;
-        justify-content: center;
-    }
+    background: #FF5733;
+    border-radius: 5px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
 }

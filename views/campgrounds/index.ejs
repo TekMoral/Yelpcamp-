@@ -1,41 +1,41 @@
 <% layout('layouts/boilerplate') %>
 
-<link rel="stylesheet" href="stylesheets/search.css">
+<link rel="stylesheet" href="/stylesheets/search.css">
 
 <div class="map" id="cluster-map"></div>
 <div class="sticky-search">
-  <div class="container">
-      <form class="search-form" action="/campgrounds" method="GET">
-          <div class="search-wrapper">
-              <!-- Search Icon -->
-              <i class="fas fa-search search-icon"></i>
-              <input 
-                  type="text" 
-                  name="search" 
-                  class="search-input" 
-                  placeholder="Find your perfect campground..."
-                  value="<%= typeof search !== 'undefined' ? search : '' %>"
-                  autocomplete="off"
-              >
-              <!-- Clear input icon (x) -->
-              <% if (typeof search !== 'undefined' && search) { %>
-                  <i class="fas fa-times clear-input"></i>
-              <% } %>
-          </div>
-          <div class="button-group">
-              <button type="submit" class="search-button">
-                  <span>Search</span>
-                  <i class="fas fa-campground"></i>
-              </button>
-              <% if (typeof search !== 'undefined' && search) { %>
-                  <a href="/campgrounds" class="clear-button">
-                      <span>Clear</span>
-                      <i class="fas fa-undo"></i>
-                  </a>
-              <% } %>
-          </div>
-      </form>
-  </div>
+
+  <div class="sticky-search">
+    <div class="container">
+        <form class="search-form" action="/campgrounds" method="GET">
+            <!-- Search Input -->
+            <input 
+                type="text" 
+                name="search" 
+                class="search-input" 
+                placeholder="Find your perfect campground..."
+                value="<%= typeof search !== 'undefined' ? search : '' %>"
+                autocomplete="off"
+            >
+
+            <!-- Search Button -->
+            <button type="submit" class="search-button">
+                <span>Search</span>
+                <i class="fas fa-campground"></i>
+            </button>
+
+            <% if (typeof search !== 'undefined' && search) { %>
+                <!-- Clear Button -->
+                <a href="/campgrounds" class="clear-button">
+                    <span>Clear</span>
+                    <i class="fas fa-undo"></i>
+                </a>
+            <% } %>
+        </form>
+    </div>
+</div>
+
+
 </div>
 
 

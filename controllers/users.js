@@ -9,9 +9,6 @@ module.exports.register = async (req, res, next) => {
         const { email, username, password } = req.body;
         const user = new User({ email, username });
         const registeredUser = await User.register(user, password);
-        
-        // Log user registration success
-        console.log("User Registered Successfully:", registeredUser);
 
         req.login(registeredUser, (err) => {
             if (err) {
@@ -33,7 +30,6 @@ module.exports.renderLogin = (req, res) => {
 };
 
 module.exports.login = (req, res, next) => {
-    console.log("User Logged In:", req.user);
 
     if (!req.user) {
         console.error("Login Failed: User Not Found");

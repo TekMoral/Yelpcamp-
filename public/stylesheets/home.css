@@ -1,7 +1,7 @@
 body {
     height: 100vh;
     background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
-    url("https://images.unsplash.com/photo-1559521783-1d1599583485?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1950&q=80");
+    url("https://res.cloudinary.com/dfger19r7/image/upload/v1740163652/Home2_juos9j.avif");
     background-size: cover;
     background-position: center;
     text-shadow: 0 0.05rem 0.1rem rgba(0, 0, 0, 0.5);
@@ -14,7 +14,7 @@ body {
 .nav-link {
     padding: 0.25rem 0;
     font-weight: 700;
-    color: rgba(244, 241, 241, 0.927);
+    color: #FFD700 ;
     margin-left: 1rem;
     border-bottom: 0.25rem solid transparent;
 }
@@ -25,7 +25,7 @@ body {
 }
 
 .nav-link.active {
-    color: white;
+    color: rgb(179, 165, 37);
     border-bottom-color:rgb(223, 220, 237);
 
 }
@@ -33,4 +33,35 @@ body {
 .btn-secondary, .btn-secondary:hover{
     color: #333;
     text-shadow: none;
+}
+
+.custom-btn {
+    display: inline-block;
+    padding: 1rem 2rem;
+    font-size: 1.2rem;
+    color: #fff;
+    background-color: transparent;
+    border: 2px solid #fff;
+    border-radius: 30px;
+    text-decoration: none;
+    text-transform: uppercase;
+    margin-top: 5px;
+    letter-spacing: 2px;
+    transition: all 0.3s ease;
+    animation: glow 1.5s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+    from {
+        box-shadow: 0 0 5px #e1eadc, 0 0 10px #fff, 0 0 15px #fff;
+    }
+    to {
+        box-shadow: 0 0 10px #fff, 0 0 20px #fff, 0 0 30px #fff;
+    }
+}
+
+.custom-btn:hover {
+    background-color: #fff;
+    color: #000;
+    animation: none;
 }

@@ -148,11 +148,6 @@ app.use((req, res, next) => {
 });
 
 
-app.use((req, res, next) => {
-  console.log("Session Data:", req.session);
-  console.log("Current User:", req.user);  // Check if user is stored
-  next();
-});
 
 app.use("/", userRoutes);
 app.use("/campgrounds", campgroundRoutes);
@@ -162,15 +157,40 @@ app.get("/", (req, res) => res.render("home"));
 
 app.all("*", (req, res, next) => next(new ExpressError("Page Not Found", 404)));
 
-// Error handling middleware
+
 app.use((err, req, res, next) => {
+  
   const { statusCode = 500 } = err;
-  if (!err.message) err.message = 'Oh No, Something Went Wrong!';
+
+  if (process.env.NODE_ENV === 'production') {
+      console.error(new Date().toISOString(), {
+          message: err.message,
+          path: req.path,
+          statusCode,
+          requestId: req.id || 'unknown',
+          stack: err.stack
+      });
+  }
+
+  // Sanitize error message for production
+  const userMessage = process.env.NODE_ENV === 'production'
+      ? statusCode === 404 
+          ? 'Page Not Found'
+          : 'Something went wrong. Please try again later.'
+      : err.message || 'Oh No, Something Went Wrong!';
+
+  // Send sanitized response
   res.status(statusCode).render('error', { 
       title: 'Error',
-      err,
-      // Don't expose stack trace in production
-      stack: process.env.NODE_ENV === 'development' ? err.stack : null
+      statusCode,
+      message: userMessage,
+      // Only include minimal error info in production
+      error: process.env.NODE_ENV === 'production' 
+          ? {} 
+          : err,
+      stack: process.env.NODE_ENV === 'development' 
+          ? err.stack 
+          : null
   });
 });
 
