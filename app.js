@@ -25,10 +25,7 @@ const reviewRoutes = require("./routes/reviews");
 
 const dbUrl = process.env.DB_URL || "mongodb://localhost:27017/yelpcamp";
 
-mongoose.connect(dbUrl, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-})
+mongoose.connect(dbUrl)
 .then(() => {
   console.log("MongoDB Atlas connected");
 })
@@ -94,7 +91,10 @@ app.use(
           ],
           fontSrc: [
               "'self'",
-              "https://fonts.gstatic.com"
+              "https://fonts.gstatic.com",
+              "https://cdnjs.cloudflare.com",
+              "https://cdn.jsdelivr.net",
+              "data:"
           ]
       },
       crossOriginEmbedderPolicy: false

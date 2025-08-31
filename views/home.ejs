@@ -4,59 +4,253 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CampBliss</title>
-    <link  rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css"
-        integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I" crossorigin="anonymous">
-    <link rel="stylesheet" href="/stylesheets/home.css">
+    <title>CampBliss - Discover Amazing Campgrounds</title>
+    <meta name="description" content="Discover and share amazing campgrounds around the world. Find your perfect outdoor adventure with CampBliss.">
+    
+    <!-- Bootstrap 5 -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Page CSS -->
+    <link rel="stylesheet" href="/stylesheets/home.css?v=bgpos1">
 </head>
 
-<body class="d-flex text-center text-white bg-dark">
-    <div class="cover-container d-flex w-100 h-100 p-3 mx-auto flex-column">
-        <header class="mb-auto">
-            <div>
-                <h3 class="float-md-left mb-0">CampBliss</h3>
-                <nav class="nav nav-masthead justify-content-center float-md-right">
-                    <a class="nav-link active" aria-current="page" href="#">Home</a>
-                    <a class="nav-link" href="/campgrounds">Campgrounds</a>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark fixed-top">
+        <div class="container">
+            <a class="navbar-brand fw-bold" href="/">
+                <i class="fas fa-campground me-2"></i>CampBliss
+            </a>
+            
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/campgrounds">Campgrounds</a>
+                    </li>
                     <% if(!currentUser) { %>
-                    <a class="nav-link" href="/login">Login</a>
-                    <a class="nav-link" href="/register">Register</a>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/login">Login</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link btn btn-outline-light ms-2 px-3" href="/register">Get Started</a>
+                    </li>
                     <% } else { %>
-                    <a class="nav-link" href="/logout">Logout</a>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user me-1"></i>Welcome, <%= currentUser.username %>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a class="dropdown-item" href="/campgrounds/new">Add Campground</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="/logout">Logout</a></li>
+                        </ul>
+                    </li>
                     <% } %>
-                </nav>
+                </ul>
             </div>
-        </header>
-       
-        <div class="home-container text-center">
-            <h1 class="fw-bold">CampBliss</h1>
-        
-            <p class="lead home-text">
-                Welcome to <strong>CampBliss</strong>!! <br>
-                Your gateway to the world's hidden gems and amazing campgrounds. <br>
-                Whether you seek solitude in remote wilderness or thrilling outdoor activities by the coast, <br>
-                <strong>CampBliss</strong> is the place to discover diverse camping destinations like never before. <br>
-                Share your stories, find inspiration, and explore the vast terrains where adventure knows no bounds.
-            </p>
-            <a href="/campgrounds" class="custom-btn">View Campgrounds</a>
-
+        </div>
+    </nav>
+    
+    <!-- Hero Section -->
+    <section class="hero-section">
+                <div class="container">
+            <div class="row min-vh-100 align-items-center">
+                <div class="col-12">
+                    <div class="hero-content text-center text-white">
+                        <h1 class="hero-title mb-4">
+                            Discover Your Next
+                            <span class="text-primary">Adventure</span>
+                        </h1>
+                        <p class="hero-subtitle mb-5">
+                            Find and share the world's most beautiful campgrounds. 
+                            From mountain peaks to ocean shores, your perfect outdoor escape awaits.
+                        </p>
+                        <div class="hero-buttons">
+                            <a href="/campgrounds" class="btn btn-primary btn-lg me-3 mb-3">
+                                <i class="fas fa-search me-2"></i>Explore Campgrounds
+                            </a>
+                            <% if(!currentUser) { %>
+                            <a href="/register" class="btn btn-outline-light btn-lg mb-3">
+                                <i class="fas fa-user-plus me-2"></i>Join Community
+                            </a>
+                            <% } else { %>
+                            <a href="/campgrounds/new" class="btn btn-outline-light btn-lg mb-3">
+                                <i class="fas fa-plus me-2"></i>Add Campground
+                            </a>
+                            <% } %>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
         
+        <!-- Scroll indicator -->
+        <div class="scroll-indicator">
+            <i class="fa-solid fa-chevron-down"></i>
+        </div>
+    </section>
 
-        <footer class="mt-auto text-white-50">
-            <p>CampBliss&copy;2025 </p>
-        </footer>
+    <!-- Features Section -->
+    <section class="features-section py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center mb-5">
+                    <h2 class="section-title">Why Choose CampBliss?</h2>
+                    <p class="section-subtitle">Everything you need for the perfect camping experience</p>
+                </div>
+            </div>
+            <div class="row g-4">
+                <div class="col-md-4">
+                    <div class="feature-card text-center h-100">
+                        <div class="feature-icon">
+                            <i class="fas fa-map-marked-alt"></i>
+                        </div>
+                        <h4>Interactive Maps</h4>
+                        <p>Discover campgrounds with detailed maps, GPS coordinates, and nearby attractions to plan your perfect trip.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card text-center h-100">
+                        <div class="feature-icon">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <h4>Trusted Reviews</h4>
+                        <p>Read authentic reviews from fellow campers and share your own experiences to help the community.</p>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="feature-card text-center h-100">
+                        <div class="feature-icon">
+                            <i class="fas fa-camera"></i>
+                        </div>
+                        <h4>Photo Gallery</h4>
+                        <p>Browse stunning photos of campgrounds and upload your own to inspire other outdoor enthusiasts.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
+    <!-- Stats Section -->
+    <section class="stats-section py-5">
+        <div class="container">
+            <div class="row text-center">
+                <div class="col-6 col-md-3 mb-4">
+                    <div class="stat-item">
+                        <h3 class="stat-number">100+</h3>
+                        <p class="stat-label">Campgrounds</p>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3 mb-4">
+                    <div class="stat-item">
+                        <h3 class="stat-number">1000+</h3>
+                        <p class="stat-label">Happy Campers</p>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3 mb-4">
+                    <div class="stat-item">
+                        <h3 class="stat-number">20+</h3>
+                        <p class="stat-label">Countries</p>
+                    </div>
+                </div>
+                <div class="col-6 col-md-3 mb-4">
+                    <div class="stat-item">
+                        <h3 class="stat-number">10k+</h3>
+                        <p class="stat-label">Reviews</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
-    </div>
+    <!-- CTA Section -->
+    <section class="cta-section py-5">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <h2 class="cta-title mb-4">Ready to Start Your Adventure?</h2>
+                    <p class="cta-subtitle mb-4">Join thousands of outdoor enthusiasts discovering amazing campgrounds worldwide.</p>
+                    <a href="/campgrounds" class="btn btn-primary btn-lg">
+                        <i class="fas fa-compass me-2"></i>Start Exploring
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
 
+    <!-- Footer -->
+    <footer class="footer py-4">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-6">
+                    <div class="footer-brand">
+                        <i class="fas fa-campground me-2"></i>
+                        <span class="fw-bold">CampBliss</span>
+                    </div>
+                </div>
+                <div class="col-md-6 text-md-end mt-3 mt-md-0">
+                    <p class="mb-0">&copy; 2025 CampBliss. All rights reserved.</p>
+                </div>
+            </div>
+        </div>
+    </footer>
 
-    <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
-        integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo"
-        crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/js/bootstrap.min.js"
-        integrity="sha384-oesi62hOLfzrys4LxRF63OJCXdXDipiYWBnvTl9Y9/TRlw5xlKIEHpNyvvDShgf/"
-        crossorigin="anonymous"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- Custom JS -->
+    <script>
+        // Smooth scrolling for scroll indicator
+        document.querySelector('.scroll-indicator').addEventListener('click', function() {
+            document.querySelector('.features-section').scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+
+        
+        
+        // Counter animation
+        function animateCounters() {
+            const counters = document.querySelectorAll('.stat-number');
+            counters.forEach(counter => {
+                const target = parseInt(counter.textContent.replace(/\D/g, ''));
+                const suffix = counter.textContent.replace(/\d/g, '');
+                let current = 0;
+                const increment = target / 100;
+                const timer = setInterval(() => {
+                    current += increment;
+                    if (current >= target) {
+                        counter.textContent = target + suffix;
+                        clearInterval(timer);
+                    } else {
+                        counter.textContent = Math.floor(current) + suffix;
+                    }
+                }, 20);
+            });
+        }
+
+        // Trigger counter animation when stats section is visible
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    animateCounters();
+                    observer.unobserve(entry.target);
+                }
+            });
+        });
+
+        observer.observe(document.querySelector('.stats-section'));
+    </script>
 </body>
 
 </html>

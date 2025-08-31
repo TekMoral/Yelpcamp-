@@ -1,98 +1,320 @@
 <% layout('layouts/boilerplate') %>
-<div class="row">
-    <h1 class="text-center">Edit Campground</h1>
-    <div class="col-md-6 offset-md-3">
-        <form action="/campgrounds/<%= campground._id %>?_method=PUT" method="POST" novalidate class="validated-form" enctype="multipart/form-data">
-            <div class="mb-3">
-                <label class="form-label" for="title">Title</label>
-                <input class="form-control <%= errors?.title ? 'is-invalid' : '' %>" 
-                       type="text" 
-                       id="title" 
-                       name="campground[title]" 
-                       value="<%= campground.title %>" 
-                       required>
+
+<link rel="stylesheet" href="/stylesheets/forms.css">
+
+<div class="container-fluid">
+    <div class="form-container">
+        <!-- Form Header -->
+        <div class="form-header">
+            <h1 class="form-title">Edit Campground</h1>
+            <p class="form-subtitle">Update your campground information</p>
+        </div>
+
+        <form action="/campgrounds/<%= campground._id %>?_method=PUT" method="POST" novalidate class="validated-form" enctype="multipart/form-data" id="editCampgroundForm">
+            
+            <!-- Title -->
+            <div class="form-group required">
+                <label class="form-label" for="title">Campground Name</label>
+                <input 
+                    class="form-control <%= errors?.title ? 'is-invalid' : '' %>" 
+                    type="text" 
+                    id="title" 
+                    name="campground[title]" 
+                    value="<%= campground.title %>"
+                    placeholder="Enter a memorable name for your campground"
+                    required
+                    maxlength="100"
+                >
                 <% if (errors?.title) { %>
-                    <div class="invalid-feedback">
-                        <%= errors.title %>  
-                    </div>
+                    <div class="invalid-feedback"><%= errors.title %></div>
                 <% } %>
+                <div class="invalid-feedback">Please provide a campground name</div>
             </div>
 
-            <div class="mb-3">
+            <!-- Location -->
+            <div class="form-group required">
                 <label class="form-label" for="location">Location</label>
-                <input class="form-control <%= errors?.location ? 'is-invalid' : '' %>" 
-                       type="text" 
-                       id="location" 
-                       name="campground[location]" 
-                       value="<%= campground.location %>" 
-                       required>
+                <input 
+                    class="form-control <%= errors?.location ? 'is-invalid' : '' %>" 
+                    type="text" 
+                    id="location" 
+                    name="campground[location]" 
+                    value="<%= campground.location %>"
+                    placeholder="City, State or specific address"
+                    required
+                >
                 <% if (errors?.location) { %>
-                    <div class="invalid-feedback">
-                        <%= errors.location %> 
-                    </div>
+                    <div class="invalid-feedback"><%= errors.location %></div>
                 <% } %>
+                <div class="invalid-feedback">Please provide a location</div>
             </div>
-
-            <div class="mb-3">
-                <label class="form-label" for="price">Campground Price</label>
+            
+            <!-- Price -->
+            <div class="form-group required">
+                <label class="form-label" for="price">Price per Night</label>
                 <div class="input-group">
-                    <span class="input-group-text" id="price-label">$</span>
-                    <input type="text" 
-                           class="form-control <%= errors?.price ? 'is-invalid' : '' %>" 
-                           id="price" 
-                           placeholder="0.00" 
-                           name="campground[price]" 
-                           value="<%= campground.price %>" 
-                           required>
-                    <% if (errors?.price) { %>
-                        <div class="invalid-feedback">
-                            <%= errors.price %> 
-                        </div>
-                    <% } %>
+                    <span class="input-group-text">$</span>
+                    <input 
+                        type="number" 
+                        class="form-control <%= errors?.price ? 'is-invalid' : '' %>" 
+                        id="price" 
+                        placeholder="25.00" 
+                        name="campground[price]" 
+                        value="<%= campground.price %>"
+                        required 
+                        min="0" 
+                        step="0.01"
+                        max="9999.99"
+                    >
                 </div>
+                <% if (errors?.price) { %>
+                    <div class="invalid-feedback"><%= errors.price %></div>
+                <% } %>
+                <div class="invalid-feedback">Please provide a valid price</div>
             </div>
 
-            <div class="mb-3">
+            <!-- Description -->
+            <div class="form-group required">
                 <label class="form-label" for="description">Description</label>
-                <textarea class="form-control <%= errors?.description ? 'is-invalid' : '' %>" 
-                          id="description" 
-                          name="campground[description]" 
-                          required><%= campground.description %></textarea>
+                <textarea 
+                    class="form-control <%= errors?.description ? 'is-invalid' : '' %>" 
+                    id="description" 
+                    name="campground[description]" 
+                    placeholder="Describe what makes this campground special..."
+                    required
+                    maxlength="1000"
+                    rows="5"
+                ><%= campground.description %></textarea>
                 <% if (errors?.description) { %>
-                    <div class="invalid-feedback">
-                        <%= errors.description %> 
-                    </div>
+                    <div class="invalid-feedback"><%= errors.description %></div>
                 <% } %>
+                <div class="invalid-feedback">Please provide a description</div>
             </div>
 
-            <div class="mb-3">
-                <label for="image" class="form-label">Add Images</label>
-                <input class="form-control <%= errors?.images ? 'is-invalid' : '' %>" 
-                       type="file" 
-                       id="image" 
-                       name="image" 
-                       multiple>
-                <% if (errors?.images) { %>
-                    <div class="invalid-feedback">
-                        <%= errors.images %> 
+            <!-- Current Images -->
+            <% if (campground.images && campground.images.length > 0) { %>
+            <div class="form-group">
+                <label class="form-label">Current Images</label>
+                <div class="current-images-container">
+                    <% campground.images.forEach(function(img, i) { %>
+                    <div class="current-image-item">
+                        <img src="<%= img.thumbnail %>" alt="Current image <%= i + 1 %>">
+                        <div class="current-image-controls">
+                            <input type="checkbox" id="delete-<%= i %>" name="deleteImages[]" value="<%= img.filename %>">
+                            <label for="delete-<%= i %>" class="delete-label">
+                                <i class="fas fa-trash"></i> Delete
+                            </label>
+                        </div>
                     </div>
-                <% } %>
-            </div>
-
-            <div class="mb-3">
-                <% campground.images.forEach(function(img, i) { %>
-                <img src="<%= img.thumbnail %>" class="img-thumbnail" alt="">
-                <div class="form-check-inline">
-                    <input type="checkbox" id="image-<%= i %>" name="deleteImages[]" value="<%= img.filename %>">
-                    <label for="image-<%= i %>">Delete?</label>
+                    <% }) %>
                 </div>
-                <% }) %>
+            </div>
+            <% } %>
+
+            <!-- Add New Images -->
+            <div class="form-group">
+                <label class="form-label" for="image">Add New Photos</label>
+                <div class="file-upload-container" id="fileUploadContainer">
+                    <input 
+                        type="file" 
+                        class="file-upload-input <%= errors?.images ? 'is-invalid' : '' %>" 
+                        id="image" 
+                        name="image" 
+                        multiple 
+                        accept="image/*"
+                    >
+                    <div class="file-upload-content">
+                        <div class="file-upload-icon">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                        </div>
+                        <div class="file-upload-text">
+                            Drag & drop new photos here or click to browse
+                        </div>
+                        <div class="file-upload-hint">
+                            Upload additional photos (JPG, PNG, WebP - Max 5MB each)
+                        </div>
+                    </div>
+                </div>
+                <% if (errors?.images) { %>
+                    <div class="invalid-feedback"><%= errors.images %></div>
+                <% } %>
+                <div class="image-preview-container" id="imagePreviewContainer"></div>
             </div>
 
-            <div class="mb-3">
-                <button class="btn btn-info">Update Campground</button>
+            <!-- Form Actions -->
+            <div class="form-actions">
+                <a href="/campgrounds/<%= campground._id %>" class="btn-form-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Cancel
+                </a>
+                <button type="submit" class="btn-form-primary" id="submitBtn">
+                    <i class="fas fa-save me-2"></i>Update Campground
+                </button>
             </div>
         </form>
-        <a href="/campgrounds/<%= campground._id %>">Back To Campground</a>
     </div>
 </div>
+
+<!-- Additional CSS for edit form -->
+<style>
+.current-images-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.current-image-item {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    background: #fff;
+}
+
+.current-image-item img {
+    width: 100%;
+    height: 120px;
+    object-fit: cover;
+}
+
+.current-image-controls {
+    padding: 0.75rem;
+    background: #f8f9fa;
+    border-top: 1px solid #e9ecef;
+}
+
+.current-image-controls input[type="checkbox"] {
+    margin-right: 0.5rem;
+}
+
+.delete-label {
+    font-size: 0.85rem;
+    color: #dc3545;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.delete-label:hover {
+    color: #b02a37;
+}
+
+.current-image-controls input[type="checkbox"]:checked + .delete-label {
+    background: #dc3545;
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 4px;
+}
+</style>
+
+<!-- Enhanced Form JavaScript for Edit -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('editCampgroundForm');
+    const fileInput = document.getElementById('image');
+    const fileUploadContainer = document.getElementById('fileUploadContainer');
+    const imagePreviewContainer = document.getElementById('imagePreviewContainer');
+    const submitBtn = document.getElementById('submitBtn');
+    
+    let selectedFiles = [];
+    const maxFiles = 10;
+    const maxFileSize = 5 * 1024 * 1024; // 5MB
+
+    // File upload handling (same as new form)
+    fileUploadContainer.addEventListener('click', () => fileInput.click());
+    
+    fileUploadContainer.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        fileUploadContainer.classList.add('dragover');
+    });
+    
+    fileUploadContainer.addEventListener('dragleave', () => {
+        fileUploadContainer.classList.remove('dragover');
+    });
+    
+    fileUploadContainer.addEventListener('drop', (e) => {
+        e.preventDefault();
+        fileUploadContainer.classList.remove('dragover');
+        handleFiles(e.dataTransfer.files);
+    });
+    
+    fileInput.addEventListener('change', (e) => {
+        handleFiles(e.target.files);
+    });
+
+    function handleFiles(files) {
+        const newFiles = Array.from(files).filter(file => {
+            if (!file.type.startsWith('image/')) {
+                showNotification('Please select only image files', 'error');
+                return false;
+            }
+            if (file.size > maxFileSize) {
+                showNotification(`File ${file.name} is too large. Maximum size is 5MB`, 'error');
+                return false;
+            }
+            return true;
+        });
+
+        selectedFiles = [...selectedFiles, ...newFiles];
+        updateImagePreviews();
+        updateFileInput();
+    }
+
+    function updateImagePreviews() {
+        imagePreviewContainer.innerHTML = '';
+        
+        selectedFiles.forEach((file, index) => {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const preview = document.createElement('div');
+                preview.className = 'image-preview';
+                preview.innerHTML = `
+                    <img src="${e.target.result}" alt="Preview ${index + 1}">
+                    <button type="button" class="image-preview-remove" onclick="removeImage(${index})">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+                imagePreviewContainer.appendChild(preview);
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+
+    window.removeImage = function(index) {
+        selectedFiles.splice(index, 1);
+        updateImagePreviews();
+        updateFileInput();
+    };
+
+    function updateFileInput() {
+        const dt = new DataTransfer();
+        selectedFiles.forEach(file => dt.items.add(file));
+        fileInput.files = dt.files;
+    }
+
+    function showNotification(message, type = 'info') {
+        const notification = document.createElement('div');
+        notification.className = `alert alert-${type === 'error' ? 'danger' : 'info'} alert-dismissible fade show`;
+        notification.style.position = 'fixed';
+        notification.style.top = '20px';
+        notification.style.right = '20px';
+        notification.style.zIndex = '9999';
+        notification.innerHTML = `
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.remove();
+        }, 5000);
+    }
+
+    // Form submission
+    form.addEventListener('submit', function(e) {
+        // Show loading state
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Updating...';
+        submitBtn.disabled = true;
+        form.classList.add('form-loading');
+    });
+});
+</script>

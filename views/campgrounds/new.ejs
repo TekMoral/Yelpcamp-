@@ -1,83 +1,337 @@
 <% layout('layouts/boilerplate') %>
-   <div class="row">
-    <h1 class="text-center">New Campground</h1>
-    <div class="col-6 offset-3">
 
-<link rel="stylesheet" href="/stylesheets/newForm.css">
-        <form action="/campgrounds" method="POST" novalidate class="validated-form" enctype="multipart/form-data">
-            <div class="mb-3">
-                <label class="form-label" for="title">Title</label>
-                <input class="form-control" type="text" id="title" name="campground[title]" required>
-                <% if (error.title) { %>
+<link rel="stylesheet" href="/stylesheets/forms.css">
+
+<div class="container-fluid">
+    <div class="form-container">
+        <!-- Form Header -->
+        <div class="form-header">
+            <h1 class="form-title">Create New Campground</h1>
+            <p class="form-subtitle">Share your favorite camping spot with the community</p>
+        </div>
+
+        <!-- Form Progress (Optional) -->
+        <div class="form-progress">
+            <div class="progress-step active">1</div>
+            <div class="progress-step">2</div>
+            <div class="progress-step">3</div>
+        </div>
+
+        <form action="/campgrounds" method="POST" novalidate class="validated-form" enctype="multipart/form-data" id="campgroundForm">
+            
+            <!-- Title -->
+            <div class="form-group required">
+                <label class="form-label" for="title">Campground Name</label>
+                <input 
+                    class="form-control" 
+                    type="text" 
+                    id="title" 
+                    name="campground[title]" 
+                    placeholder="Enter a memorable name for your campground"
+                    required
+                    maxlength="100"
+                >
+                <% if (typeof error !== 'undefined' && error.title) { %>
                     <div class="invalid-feedback"><%= error.title %></div>
                 <% } %>
-                <div class="invalid-feedback">Title is Required</div>
+                <div class="invalid-feedback">Please provide a campground name</div>
             </div>
-            <div class="mb-3">
+
+            <!-- Location -->
+            <div class="form-group required">
                 <label class="form-label" for="location">Location</label>
-                <input class="form-control" type="text" id="location" name="campground[location]" required>
-                <% if (error.location) { %>
+                <input 
+                    class="form-control" 
+                    type="text" 
+                    id="location" 
+                    name="campground[location]" 
+                    placeholder="City, State or specific address"
+                    required
+                >
+                <% if (typeof error !== 'undefined' && error.location) { %>
                     <div class="invalid-feedback"><%= error.location %></div>
                 <% } %>
-                <div class="invalid-feedback">Location is Required</div>
-    
+                <div class="invalid-feedback">Please provide a location</div>
             </div>
             
-            <div class="mb-3">
-                <label class="form-label" for="price">Campground Price</label>
-                <div class="input-group has-validation">
-                    <span class="input-group-text" id="price-label">$</span>
+            <!-- Price -->
+            <div class="form-group required">
+                <label class="form-label" for="price">Price per Night</label>
+                <div class="input-group">
+                    <span class="input-group-text">$</span>
                     <input 
                         type="number" 
                         class="form-control" 
                         id="price" 
-                        placeholder="0.00" 
-                        aria-label="price" 
-                        aria-describedby="price-label"
+                        placeholder="25.00" 
                         name="campground[price]" 
                         required 
                         min="0" 
                         step="0.01"
-                        onkeydown="return event.keyCode !== 189"
+                        max="9999.99"
                     >
-                    <div class="invalid-feedback">
-                        <% if (error && error.price) { %>
-                            <%= error.price %>
-                        <% } else { %>
-                            Price is Required
-                        <% } %>
+                </div>
+                <% if (typeof error !== 'undefined' && error.price) { %>
+                    <div class="invalid-feedback"><%= error.price %></div>
+                <% } %>
+                <div class="invalid-feedback">Please provide a valid price</div>
+            </div>
+
+            <!-- Description -->
+            <div class="form-group required">
+                <label class="form-label" for="description">Description</label>
+                <textarea 
+                    class="form-control" 
+                    id="description" 
+                    name="campground[description]" 
+                    placeholder="Describe what makes this campground special. Include amenities, nearby attractions, and any important details..."
+                    required
+                    maxlength="1000"
+                    rows="5"
+                ></textarea>
+                <% if (typeof error !== 'undefined' && error.description) { %>
+                    <div class="invalid-feedback"><%= error.description %></div>
+                <% } %>
+                <div class="invalid-feedback">Please provide a description</div>
+            </div>
+
+            <!-- Image Upload -->
+            <div class="form-group">
+                <label class="form-label" for="image">Campground Photos</label>
+                <div class="file-upload-container" id="fileUploadContainer">
+                    <input 
+                        type="file" 
+                        class="file-upload-input" 
+                        id="image" 
+                        name="image" 
+                        multiple 
+                        accept="image/*"
+                    >
+                    <div class="file-upload-content">
+                        <div class="file-upload-icon">
+                            <i class="fas fa-cloud-upload-alt"></i>
+                        </div>
+                        <div class="file-upload-text">
+                            Drag & drop photos here or click to browse
+                        </div>
+                        <div class="file-upload-hint">
+                            Upload up to 10 photos (JPG, PNG, WebP - Max 5MB each)
+                        </div>
                     </div>
                 </div>
-            </div>
-            
-
-            <div class="mb-3">
-                <label class="form-label" for="location">Description</label>
-                <textarea class="form-control" type="text" id="description" name="campground[description]" required></textarea>
-                <% if (error.description) { %>
-                    <div class="invalid-feedback"><%= error.descriptipn %></div>
-                <% } %>
-
+                <div class="image-preview-container" id="imagePreviewContainer"></div>
             </div>
 
-            <!--<div class="mb-3">
-                <div id="map" style="width: 100%; height: 300px;"></div>
-            </div> -->
-            
-
-            <div class="input-group mb-3">
-                <input type="file" class="form-control" id="image" name="image" multiple>
-                <label for="image" class="form-file-label">
-                </label>
-             </div>
-
-            <div class="mb-3">
-            <button class="btn btn-success">Add Campground</button>
-        </div>
+            <!-- Form Actions -->
+            <div class="form-actions">
+                <a href="/campgrounds" class="btn-form-secondary">
+                    <i class="fas fa-arrow-left me-2"></i>Cancel
+                </a>
+                <button type="submit" class="btn-form-primary" id="submitBtn">
+                    <i class="fas fa-plus me-2"></i>Create Campground
+                </button>
+            </div>
         </form>
-        <a href="/campgrounds">All Campgrounds</a>
     </div>
-   </div>
+</div>
+
+<!-- Enhanced Form JavaScript -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('campgroundForm');
+    const fileInput = document.getElementById('image');
+    const fileUploadContainer = document.getElementById('fileUploadContainer');
+    const imagePreviewContainer = document.getElementById('imagePreviewContainer');
+    const submitBtn = document.getElementById('submitBtn');
+    
+    let selectedFiles = [];
+    let currentStep = 1;
+    const maxFiles = 10;
+    const maxFileSize = 5 * 1024 * 1024; // 5MB
+
+    // Progress steps
+    const progressSteps = document.querySelectorAll('.progress-step');
+    
+    function updateProgress(step) {
+        progressSteps.forEach((stepEl, index) => {
+            stepEl.classList.remove('active', 'completed');
+            if (index + 1 < step) {
+                stepEl.classList.add('completed');
+            } else if (index + 1 === step) {
+                stepEl.classList.add('active');
+            }
+        });
+    }
+
+    // Form validation and progress
+    const requiredFields = ['title', 'location', 'price', 'description'];
+    
+    requiredFields.forEach(fieldName => {
+        const field = document.getElementById(fieldName);
+        field.addEventListener('input', function() {
+            validateField(this);
+            updateFormProgress();
+        });
+        
+        field.addEventListener('blur', function() {
+            validateField(this);
+        });
+    });
+
+    function validateField(field) {
+        const value = field.value.trim();
+        const isValid = field.checkValidity() && value !== '';
+        
+        field.classList.remove('is-valid', 'is-invalid');
+        if (value !== '') {
+            field.classList.add(isValid ? 'is-valid' : 'is-invalid');
+        }
+        
+        return isValid;
+    }
+
+    function updateFormProgress() {
+        const filledFields = requiredFields.filter(fieldName => {
+            const field = document.getElementById(fieldName);
+            return field.value.trim() !== '' && field.checkValidity();
+        }).length;
+        
+        if (filledFields === 0) {
+            updateProgress(1);
+        } else if (filledFields < requiredFields.length) {
+            updateProgress(2);
+        } else {
+            updateProgress(3);
+        }
+    }
+
+    // File upload handling
+    fileUploadContainer.addEventListener('click', () => fileInput.click());
+    
+    fileUploadContainer.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        fileUploadContainer.classList.add('dragover');
+    });
+    
+    fileUploadContainer.addEventListener('dragleave', () => {
+        fileUploadContainer.classList.remove('dragover');
+    });
+    
+    fileUploadContainer.addEventListener('drop', (e) => {
+        e.preventDefault();
+        fileUploadContainer.classList.remove('dragover');
+        handleFiles(e.dataTransfer.files);
+    });
+    
+    fileInput.addEventListener('change', (e) => {
+        handleFiles(e.target.files);
+    });
+
+    function handleFiles(files) {
+        const newFiles = Array.from(files).filter(file => {
+            if (!file.type.startsWith('image/')) {
+                showNotification('Please select only image files', 'error');
+                return false;
+            }
+            if (file.size > maxFileSize) {
+                showNotification(`File ${file.name} is too large. Maximum size is 5MB`, 'error');
+                return false;
+            }
+            return true;
+        });
+
+        if (selectedFiles.length + newFiles.length > maxFiles) {
+            showNotification(`You can only upload up to ${maxFiles} images`, 'error');
+            return;
+        }
+
+        selectedFiles = [...selectedFiles, ...newFiles];
+        updateImagePreviews();
+        updateFileInput();
+    }
+
+    function updateImagePreviews() {
+        imagePreviewContainer.innerHTML = '';
+        
+        selectedFiles.forEach((file, index) => {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                const preview = document.createElement('div');
+                preview.className = 'image-preview';
+                preview.innerHTML = `
+                    <img src="${e.target.result}" alt="Preview ${index + 1}">
+                    <button type="button" class="image-preview-remove" onclick="removeImage(${index})">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+                imagePreviewContainer.appendChild(preview);
+            };
+            reader.readAsDataURL(file);
+        });
+    }
+
+    window.removeImage = function(index) {
+        selectedFiles.splice(index, 1);
+        updateImagePreviews();
+        updateFileInput();
+    };
+
+    function updateFileInput() {
+        const dt = new DataTransfer();
+        selectedFiles.forEach(file => dt.items.add(file));
+        fileInput.files = dt.files;
+    }
+
+    function showNotification(message, type = 'info') {
+        // Simple notification - you can enhance this
+        const notification = document.createElement('div');
+        notification.className = `alert alert-${type === 'error' ? 'danger' : 'info'} alert-dismissible fade show`;
+        notification.style.position = 'fixed';
+        notification.style.top = '20px';
+        notification.style.right = '20px';
+        notification.style.zIndex = '9999';
+        notification.innerHTML = `
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+            notification.remove();
+        }, 5000);
+    }
+
+    // Form submission
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Validate all fields
+        let isValid = true;
+        requiredFields.forEach(fieldName => {
+            const field = document.getElementById(fieldName);
+            if (!validateField(field)) {
+                isValid = false;
+            }
+        });
+
+        if (!isValid) {
+            showNotification('Please fill in all required fields correctly', 'error');
+            return;
+        }
+
+        // Show loading state
+        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Creating...';
+        submitBtn.disabled = true;
+        form.classList.add('form-loading');
+
+        // Submit form
+        this.submit();
+    });
+
+    // Initialize progress
+    updateFormProgress();
+});
+</script>
 
    <script>
     const mapToken = '<%- process.env.MAPBOX_TOKEN %>'; // Make sure this matches your environment variable name

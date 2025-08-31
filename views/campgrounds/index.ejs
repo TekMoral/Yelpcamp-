@@ -1,85 +1,143 @@
 <% layout('layouts/boilerplate') %>
 
-<link rel="stylesheet" href="/stylesheets/search.css">
+<link rel="stylesheet" href="/stylesheets/campgrounds-index.css">
 
-<div class="map" id="cluster-map"></div>
-<div class="sticky-search">
-
-  <div class="sticky-search">
+<div class="campgrounds-page">
     <div class="container">
-        <form class="search-form" action="/campgrounds" method="GET">
-            <!-- Search Input -->
-            <input 
-                type="text" 
-                name="search" 
-                class="search-input" 
-                placeholder="Find your perfect campground..."
-                value="<%= typeof search !== 'undefined' ? search : '' %>"
-                autocomplete="off"
-            >
-
-            <!-- Search Button -->
-            <button type="submit" class="search-button">
-                <span>Search</span>
-                <i class="fas fa-campground"></i>
-            </button>
-
-            <% if (typeof search !== 'undefined' && search) { %>
-                <!-- Clear Button -->
-                <a href="/campgrounds" class="clear-button">
-                    <span>Clear</span>
-                    <i class="fas fa-undo"></i>
-                </a>
-            <% } %>
-        </form>
-    </div>
-</div>
-
-
-</div>
-
-
-<div class="content-wrapper">
-    <div class="container">
-        <h1>All Campgrounds</h1>
-
-        <% if (typeof search !== 'undefined' && search) { %>
-            <div class="mb-3">
-                <% if (campgrounds.length === 0) { %>
-                    <p class="text-muted">No campgrounds found matching '<%= search %>'</p>
-                <% } else { %>
-                    <p class="text-muted">Found <%= campgrounds.length %> campground<%= campgrounds.length === 1 ? '' : 's' %> matching '<%= search %>'</p>
-                <% } %>
-            </div>
-        <% } %>
-
-        <div>
-            <a href="/campgrounds/new" class="btn btn-success mb-3">Add a New Campground</a>
+        
+        <!-- Map Container -->
+        <div class="map-container">
+            <div id="cluster-map"></div>
         </div>
 
-        <% for (let campground of campgrounds) { %>
-            <div class="card mb-3 border border-info">
-                <div class="row">
-                    <div class="col-md-4">
-                        <% if (campground.images.length) { %>
-                            <img class="img-fluid" alt="" src="<%= campground.images[0].url %>">
+        <!-- Enhanced Search Section -->
+        <div class="search-section">
+            <form class="search-form" action="/campgrounds" method="GET">
+                <div class="search-input-group">
+                    <i class="fas fa-search search-icon"></i>
+                    <input 
+                        type="text" 
+                        name="search" 
+                        class="search-input" 
+                        placeholder="Find your perfect campground..."
+                        value="<%= typeof search !== 'undefined' ? search : '' %>"
+                        autocomplete="off"
+                    >
+                </div>
+
+                <button type="submit" class="search-button">
+                    <i class="fas fa-search me-2"></i>
+                    <span>Search</span>
+                </button>
+
+                <% if (typeof search !== 'undefined' && search) { %>
+                    <a href="/campgrounds" class="clear-button">
+                        <i class="fas fa-times me-2"></i>
+                        <span>Clear</span>
+                    </a>
+                <% } %>
+            </form>
+        </div>
+
+        <!-- Results Header -->
+        <div class="results-header">
+            <div>
+                <h1 class="page-title">
+                    <% if (typeof search !== 'undefined' && search) { %>
+                        Search Results
+                    <% } else { %>
+                        All Campgrounds
+                    <% } %>
+                </h1>
+                
+                <% if (typeof search !== 'undefined' && search) { %>
+                    <div class="results-info">
+                        <% if (campgrounds.length === 0) { %>
+                            No campgrounds found matching '<strong><%= search %></strong>'
                         <% } else { %>
-                            <img class="img-fluid" alt="" src="https://res.cloudinary.com/dfger19r7/image/upload/v1735279588/YelpCamp/ylhtrj9gkfvko4djcs3k.png">
+                            Found <span class="results-count"><%= campgrounds.length %></span> 
+                            campground<%= campgrounds.length === 1 ? '' : 's' %> matching '<strong><%= search %></strong>'
                         <% } %>
                     </div>
-                    <div class="col-md-8">
-                        <div class="card-body">
-                            <h5 class="card-title"><%= campground.title %></h5>
-                            <p class="card-text"><%= campground.description %></p>
-                            <p class="card-text">
-                                <small class="text-muted"><%= campground.location %></small>
+                <% } else { %>
+                    <div class="results-info">
+                        Showing <span class="results-count"><%= campgrounds.length %></span> amazing campgrounds
+                    </div>
+                <% } %>
+            </div>
+
+            <a href="/campgrounds/new" class="add-campground-btn">
+                <i class="fas fa-plus"></i>
+                <span>Add Campground</span>
+            </a>
+        </div>
+
+        <!-- Campgrounds Grid -->
+        <% if (campgrounds.length === 0) { %>
+            <div class="empty-state">
+                <div class="empty-state-icon">
+                    <i class="fas fa-search"></i>
+                </div>
+                <h2 class="empty-state-title">No campgrounds found</h2>
+                <p class="empty-state-text">
+                    <% if (typeof search !== 'undefined' && search) { %>
+                        Try adjusting your search terms or browse all campgrounds.
+                    <% } else { %>
+                        Be the first to add a campground to our community!
+                    <% } %>
+                </p>
+                <% if (typeof search !== 'undefined' && search) { %>
+                    <a href="/campgrounds" class="add-campground-btn">
+                        <i class="fas fa-list me-2"></i>View All Campgrounds
+                    </a>
+                <% } else { %>
+                    <a href="/campgrounds/new" class="add-campground-btn">
+                        <i class="fas fa-plus me-2"></i>Add First Campground
+                    </a>
+                <% } %>
+            </div>
+        <% } else { %>
+            <div class="campgrounds-grid">
+                <% for (let campground of campgrounds) { %>
+                    <div class="campground-card">
+                        <div class="card-image-container">
+                            <% if (campground.images && campground.images.length) { %>
+                                <img class="card-image" src="<%= campground.images[0].url %>" alt="<%= campground.title %>">
+                            <% } else { %>
+                                <img class="card-image" src="https://res.cloudinary.com/dfger19r7/image/upload/v1735279588/YelpCamp/ylhtrj9gkfvko4djcs3k.png" alt="Default campground">
+                            <% } %>
+                            
+                            <div class="card-badge">
+                                $<%= campground.price %>/night
+                            </div>
+                        </div>
+
+                        <div class="card-content">
+                            <h3 class="card-title"><%= campground.title %></h3>
+                            
+                            <div class="card-location">
+                                <i class="fas fa-map-marker-alt"></i>
+                                <span><%= campground.location %></span>
+                            </div>
+
+                            <p class="card-description">
+                                <%= campground.description %>
                             </p>
-                            <a class="btn btn-primary" href="/campgrounds/<%= campground._id %>">
-                                View <%= campground.title %>
-                            </a>
+
+                            <div class="card-footer">
+                                <div class="card-price">
+                                    $<%= campground.price %>
+                                    <span class="card-price-label">per night</span>
+                                </div>
+                                
+                                <a href="/campgrounds/<%= campground._id %>" class="card-button">
+                                    <i class="fas fa-eye me-1"></i>
+                                    View Details
+                                </a>
+                            </div>
                         </div>
                     </div>
-                </div>
+                <% } %>
             </div>
         <% } %>
     </div>
