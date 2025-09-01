@@ -17,6 +17,8 @@ const helmet = require("helmet");
 const MongoStore = require("connect-mongo");
 const mongoSanitize = require("express-mongo-sanitize");
 const User = require("./models/user");
+const pkg = require('./package.json');
+const assetVersion = process.env.ASSET_VERSION || (pkg && pkg.version) || '1';
 
 const userRoutes = require("./routes/users");
 const campgroundRoutes = require("./routes/campgrounds");
@@ -43,7 +45,15 @@ app.set("views", path.join(__dirname, "views"));
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 app.use(methodOverride("_method"));
-app.use(express.static(path.join(__dirname, "public")));
+app.use(express.static(path.join(__dirname, "public"), {
+  maxAge: '1y',
+  etag: true,
+  setHeaders: (res, filePath) => {
+    if (!filePath.endsWith('.html')) {
+      res.setHeader('Cache-Control', 'public, max-age=31536000, immutable');
+    }
+  }
+}));
 app.use(mongoSanitize({ replaceWith: "_" }));
 
 app.use(
@@ -143,6 +153,7 @@ passport.deserializeUser(User.deserializeUser());
 app.use((req, res, next) => {
   res.locals.currentUser = req.user;
   res.locals.currentPath = req.path;
+  res.locals.assetVersion = assetVersion;
   // Dedicated flash locals to avoid collisions with view-level variables like 'error'
   res.locals.flashSuccess = req.flash("success");
   res.locals.flashError = req.flash("error");
