@@ -54,7 +54,6 @@ body{
   transition: transform .2s ease;
 }
 /* When expanded, show X icon */
-.navbar .navbar-toggler[aria-expanded="true"] .navbar-toggler-icon,
-.navbar .navbar-toggler:not(.collapsed) .navbar-toggler-icon {
+.navbar .navbar-toggler[aria-expanded="true"] .navbar-toggler-icon {
   background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba(255,255,255,0.85)' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M6 6L24 24M24 6L6 24'/%3e%3c/svg%3e");
 }

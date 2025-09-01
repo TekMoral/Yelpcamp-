@@ -23,19 +23,25 @@ map.on('style.load', () => {
     });
 });
 
-// Convert the campgrounds data to GeoJSON format
+// Convert the campgrounds data to GeoJSON format (with guards)
+const _src = (typeof campgrounds !== 'undefined' && campgrounds && Array.isArray(campgrounds.features))
+  ? campgrounds.features
+  : [];
+
 const geojsonData = {
     type: "FeatureCollection",
-    features: campgrounds.features.map(campground => ({
+    features: _src
+      .filter(cg => cg && cg.geometry && Array.isArray(cg.geometry.coordinates) && cg.geometry.coordinates.length === 2)
+      .map(campground => ({
         type: "Feature",
         properties: {
             popUpMarkup: `<strong><a href="/campgrounds/${campground._id}">${campground.title}</a></strong><p>${campground.location}</p>`,
         },
         geometry: {
             type: "Point",
-            coordinates: campground.geometry.coordinates // Ensure this exists in your database
+            coordinates: campground.geometry.coordinates
         }
-    }))
+      }))
 };
 
 map.on("load", () => {
