@@ -373,3 +373,50 @@
 .campground-card:nth-child(4) { animation-delay: 0.4s; }
 .campground-card:nth-child(5) { animation-delay: 0.5s; }
 .campground-card:nth-child(6) { animation-delay: 0.6s; }
+
+/* Mobile Button Overrides - Small circular buttons */
+@media (max-width: 768px) {
+  .search-form {
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 0.75rem !important;
+  }
+  
+  .search-input-group {
+    flex: 1 !important;
+  }
+  
+  .search-button {
+    width: auto !important;
+    padding: 1rem !important;
+    border-radius: 50% !important;
+    min-width: 50px !important;
+    justify-content: center !important;
+    flex-shrink: 0 !important;
+  }
+  
+  .search-button span {
+    display: none !important;
+  }
+  
+  .search-button i {
+    margin: 0 !important;
+  }
+  
+  .clear-button {
+    width: auto !important;
+    padding: 1rem !important;
+    border-radius: 50% !important;
+    min-width: 50px !important;
+    justify-content: center !important;
+    flex-shrink: 0 !important;
+  }
+  
+  .clear-button span {
+    display: none !important;
+  }
+  
+  .clear-button i {
+    margin: 0 !important;
+  }
+}
