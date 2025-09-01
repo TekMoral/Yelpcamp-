@@ -6,6 +6,14 @@ const passport = require("passport");
 const User = require("../models/user");
 const users = require("../controllers/users");
 
+// Map email to username for compatibility with any middleware expecting 'username'
+function mapEmailToUsername(req, res, next) {
+  if (req.body && req.body.email && !req.body.username) {
+    req.body.username = req.body.email;
+  }
+  next();
+}
+
 router
   .route("/register")
   .get(users.renderRegister)
@@ -15,10 +23,12 @@ router.get("/login", users.renderLogin);
 
 router.post(
   "/login",
+  mapEmailToUsername,
   storeReturnTo,
   passport.authenticate("local", {
     failureFlash: true,
     failureRedirect: "/login",
+    usernameField: 'email'
   }),
   users.login
 );

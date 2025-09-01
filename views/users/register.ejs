@@ -2,35 +2,54 @@
 
 <link rel="stylesheet" href="/stylesheets/register.css">
 
-<div class="container d-flex justify-content-center align-items-center min-vh-100">
-    <div class="row w-100 justify-content-center">
-        <div class="col-md-6 col-xl-4">
-            <div class="card shadow p-4">
-                <div class="card-body">
-                    <h5 class="card-title text-center">Register</h5>
-                    <form action="/register" method="POST" class="validated-form" novalidate>
-                        <div class="mb-3">
-                            <label class="form-label" for="username">Username</label>
-                            <input class="form-control" type="text" id="username" name="username" required>
-                            <div class="valid-feedback">Looks good!</div>
-                            <div class="invalid-feedback">Username is Required</div>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label" for="email">Email</label>
-                            <input class="form-control" type="email" id="email" name="email" required>
-                            <div class="valid-feedback">Looks good!</div>
-                            <div class="invalid-feedback">Email is Required</div>
-                        </div>
-                        <div class="mb-3">
-                            <label class="form-label" for="password">Password</label>
-                            <input class="form-control" type="password" id="password" name="password" required>
-                            <div class="valid-feedback">Looks good!</div>
-                            <div class="invalid-feedback">Password is Required</div>
-                        </div>
-                        <button class="btn btn-success w-100">Register</button>
-                    </form>
-                </div>
-            </div>
+<div class="auth-wrapper min-vh-100 d-flex align-items-center justify-content-center py-5">
+  <div class="card auth-card shadow-lg border-0">
+    <div class="card-body p-4 p-md-5">
+      <div class="text-center mb-4">
+        <div class="brand-badge mx-auto mb-2">⛺</div>
+        <h2 class="fw-bold mb-1">Create your account</h2>
+        <p class="text-muted mb-0">Join the CampBliss community</p>
+      </div>
+
+      <form action="/register" method="POST" class="validated-form" novalidate>
+        <div class="form-floating mb-3">
+          <input class="form-control" type="email" id="email" name="email" placeholder="name@example.com" autocomplete="email" required>
+          <label for="email">Email</label>
+          <div class="valid-feedback">Looks good!</div>
+          <div class="invalid-feedback">Valid email is required</div>
         </div>
+
+        <div class="mb-3 position-relative">
+          <div class="form-floating">
+            <input class="form-control" type="password" id="password" name="password" placeholder="Password" autocomplete="new-password" required minlength="8" pattern="^(?=.*[A-Z]).{8,}$" title="At least 8 characters and 1 uppercase letter">
+            <label for="password">Password</label>
+            <div class="valid-feedback">Looks good!</div>
+            <div class="invalid-feedback">Password must be at least 8 characters and include 1 uppercase letter</div>
+          </div>
+          <button type="button" class="btn btn-link toggle-password px-2" aria-label="Show password">Show</button>
+        </div>
+
+        <button class="btn btn-success w-100 py-2 js-submit-btn" data-loading-text="Registering...">Register</button>
+      </form>
+
+      <div class="text-center mt-4 small">
+        <span class="text-muted">Already have an account?</span>
+        <a href="/login" class="fw-semibold">Log in</a>
+      </div>
     </div>
+  </div>
 </div>
+
+<script>
+  (function(){
+    const btn = document.querySelector('.toggle-password');
+    if (!btn) return;
+    const input = document.getElementById('password');
+    btn.addEventListener('click', function(){
+      const isText = input.getAttribute('type') === 'text';
+      input.setAttribute('type', isText ? 'password' : 'text');
+      this.textContent = isText ? 'Show' : 'Hide';
+      this.setAttribute('aria-label', isText ? 'Show password' : 'Hide password');
+    });
+  })();
+</script>

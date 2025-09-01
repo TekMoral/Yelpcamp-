@@ -136,14 +136,19 @@ app.use(session(sessionConfig));
 app.use(flash());
 app.use(passport.initialize());
 app.use(passport.session());
-passport.use(new LocalStrategy(User.authenticate()));
+passport.use(new LocalStrategy({ usernameField: 'email' }, User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 app.use((req, res, next) => {
   res.locals.currentUser = req.user;
-  res.locals.success = req.flash("success");
-  res.locals.error = req.flash("error");
+  res.locals.currentPath = req.path;
+  // Dedicated flash locals to avoid collisions with view-level variables like 'error'
+  res.locals.flashSuccess = req.flash("success");
+  res.locals.flashError = req.flash("error");
+  // Keep legacy keys for any older templates (optional)
+  res.locals.success = res.locals.flashSuccess;
+  res.locals.error = res.locals.flashError;
   next();
 });
 

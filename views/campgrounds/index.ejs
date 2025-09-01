@@ -19,9 +19,10 @@
                         type="text" 
                         name="search" 
                         class="search-input" 
-                        placeholder="Find your perfect campground..."
+                        placeholder="Search campgrounds..."
                         value="<%= typeof search !== 'undefined' ? search : '' %>"
                         autocomplete="off"
+                        required
                     >
                 </div>
 
@@ -145,7 +146,32 @@
 
 <script>
     const mapToken = '<%- process.env.MAPBOX_TOKEN %>';
-    const campgrounds = { features: <%- JSON.stringify(campgrounds) %> };
+    const campgrounds = '{ features: <%- JSON.stringify(campgrounds) %> }';
 </script>
 
+<script>
+  document.addEventListener('DOMContentLoaded', function(){
+    var form = document.querySelector('.search-form');
+    var input = form ? form.querySelector('.search-input') : null;
+    var button = form ? form.querySelector('.search-button') : null;
+    if (!form || !input || !button) return;
+
+    function syncState(){
+      var hasText = (input.value || '').trim().length > 0;
+      button.disabled = !hasText;
+      button.classList.toggle('disabled', !hasText);
+    }
+
+    // Initialize and bind
+    syncState();
+    input.addEventListener('input', syncState);
+
+    form.addEventListener('submit', function(e){
+      if ((input.value || '').trim().length === 0) {
+        e.preventDefault();
+        syncState();
+      }
+    });
+  });
+</script>
 <script src="/javascripts/clusterMap.js"></script>

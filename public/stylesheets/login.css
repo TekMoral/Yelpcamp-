@@ -1,31 +1,87 @@
-/* Apply background image */
+/* Professional background (theme-aligned) */
 body {
-    background: url('https://res.cloudinary.com/dfger19r7/image/upload/v1739929852/787593-tent-wallpaper-top-free-tent-background_urfqg0.jpg') no-repeat center center/cover;
-    height: 100vh;
-    
-
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  min-height: 100vh;
 }
 
-/* Card styling */
-.card {
-    width: 400px;
-    background: rgba(190, 185, 185, 0.8); /* Slight transparency */
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    min-height: 300px;
+/* Wrapper with subtle overlay for readability */
+.auth-wrapper {
+  position: relative;
+  width: 100%;
+}
+
+/* Glassmorphism card */
+.auth-card {
+  position: relative;
+  z-index: 1;
+  width: 100%;
+  max-width: 420px;
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.6);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+}
+
+/* Brand badge */
+.brand-badge {
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: rgba(25, 135, 84, 0.1);
+  color: #198754;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  border: 1px solid rgba(25, 135, 84, 0.25);
 }
 
 /* Form field styles */
+.form-floating > .form-control {
+  background-color: rgba(255, 255, 255, 0.95);
+}
 .form-control {
-    border-radius: 10px;
-    font-size: 16px;
-    -webkit-border-radius: 10px;
-    -moz-border-radius: 10px;
-    -ms-border-radius: 10px;
-    -o-border-radius: 10px;
+  border-radius: 10px;
+  font-size: 16px;
+}
+.form-control:focus {
+  border-color: rgba(25, 135, 84, 0.35);
+  box-shadow: 0 0 0 0.25rem rgba(25, 135, 84, 0.15);
+}
+.form-floating label {
+  color: rgba(0, 0, 0, 0.55);
 }
 
+/* Password toggle button placement */
+.position-relative .toggle-password {
+  position: absolute;
+  right: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #198754;
+  font-weight: 600;
+}
+.position-relative .toggle-password:hover {
+  color: #146c43;
+}
+.form-floating .form-control {
+  padding-right: 3rem; /* space for toggle button */
+}
+
+/* Buttons */
 .btn-success {
-    width: 35%;
+  border-radius: 10px;
+  box-shadow: 0 6px 14px rgba(25, 135, 84, 0.2);
+}
+.btn-success:hover {
+  box-shadow: 0 8px 18px rgba(25, 135, 84, 0.3);
+}
+
+/* Responsive tweaks */
+@media (max-width: 576px) {
+  .auth-card {
+    margin: 0 1rem;
+  }
 }

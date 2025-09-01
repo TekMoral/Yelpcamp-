@@ -1,9 +1,15 @@
+<% 
+  const _currentPath = (typeof currentPath !== 'undefined' && currentPath) ? currentPath : ''; 
+  const _displayName = (currentUser && (currentUser.email || currentUser.username)) || 'User';
+  const _localPart = _displayName.includes('@') ? _displayName.split('@')[0] : _displayName;
+  const _initial = (_localPart && _localPart.charAt(0)) ? _localPart.charAt(0).toUpperCase() : 'U';
+%>
 <nav
-  class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark"
+  class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark"
   style="margin-bottom: 0 !important"
 >
   <div class="container-fluid">
-    <a class="navbar-brand" href="#">CampBliss</a>
+    <a class="navbar-brand" href="/">CampBliss</a>
     <button
       class="navbar-toggler"
       type="button"
@@ -17,33 +23,32 @@
     </button>
     <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
       <div class="navbar-nav">
-        <a class="nav-link" href="/">Home</a>
-        <a class="nav-link" href="/campgrounds">Campgrounds</a>
-        <a class="nav-link" href="/campgrounds/new">New Campground</a>
+        <a class="nav-link <%= _currentPath === '/' ? 'active' : '' %>" href="/">Home</a>
+        <a class="nav-link <%= _currentPath.startsWith('/campgrounds') && !_currentPath.endsWith('/new') ? 'active' : '' %>" href="/campgrounds">Campgrounds</a>
+        <a class="nav-link <%= _currentPath === '/campgrounds/new' ? 'active' : '' %>" href="/campgrounds/new">New Campground</a>
       </div>
 
       <div class="navbar-nav ms-auto">
-        <% try { %> <% if(typeof currentUser !== 'undefined' && currentUser) {
-        %>
-
-        <a class="nav-link" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal">Logout</a>
-
-
+        <% if(currentUser) { %>
+          <div class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="userMenu" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <span class="avatar bg-success text-white rounded-circle d-inline-flex justify-content-center align-items-center me-2" style="width:32px;height:32px;font-size:0.9rem;">
+                <%= _initial %>
+              </span>
+              <span><%= _displayName %></span>
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu">
+              <li><a class="dropdown-item" href="/campgrounds/new">New Campground</a></li>
+              <li><hr class="dropdown-divider"></li>
+              <li><a class="dropdown-item text-danger" href="#" data-bs-toggle="modal" data-bs-target="#logoutModal">Logout</a></li>
+            </ul>
+          </div>
         <% } else { %>
-        <a class="nav-link" href="/login">Login</a>
-        <a class="nav-link" href="/register">Register</a>
-        <% } %> <% } catch (e) { %>
-        <a class="nav-link" href="/login">Login</a>
-        <a class="nav-link" href="/register">Register</a>
+          <a class="nav-link <%= _currentPath === '/login' ? 'active' : '' %>" href="/login">Login</a>
+          <a class="nav-link <%= _currentPath === '/register' ? 'active' : '' %>" href="/register">Register</a>
         <% } %>
       </div>
-      <nav
-        class="navbar sticky-top navbar-expand-lg navbar-dark bg-dark"
-        style="margin-bottom: 0 !important"
-      >
-    
-      </nav>
-    </div>
+          </div>
   </div>
 </nav>
 

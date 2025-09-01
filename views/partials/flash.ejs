@@ -1,13 +1,58 @@
-<% if (typeof success !== 'undefined' && success.length > 0) { %>
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        <%= success %>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+<div class="toast-container" aria-live="polite" aria-atomic="true">
+  <% const s = (typeof flashSuccess !== 'undefined') ? flashSuccess : success; const e = (typeof flashError !== 'undefined') ? flashError : error; %>
+  <% if (Array.isArray(s) && s.length) { s.forEach(function(msg){ %>
+    <div class="toast align-items-center text-white bg-success border-0" role="status" aria-live="polite" aria-atomic="true" data-bs-delay="4000" data-bs-autohide="true">
+      <div class="d-flex">
+        <div class="toast-body"><%= msg %></div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
     </div>
-<% } %>
+  <% }) } else if (typeof s === 'string' && s.length) { %>
+    <div class="toast align-items-center text-white bg-success border-0" role="status" aria-live="polite" aria-atomic="true" data-bs-delay="4000" data-bs-autohide="true">
+      <div class="d-flex">
+        <div class="toast-body"><%= success %></div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+    </div>
+  <% } %>
 
-<% if (typeof error !== 'undefined' && error.length > 0) { %>
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        <%= error %>
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  <% if (Array.isArray(e) && e.length) { e.forEach(function(msg){ %>
+    <div class="toast align-items-center text-white bg-danger border-0" role="status" aria-live="assertive" aria-atomic="true" data-bs-delay="6000" data-bs-autohide="true">
+      <div class="d-flex">
+        <div class="toast-body"><%= msg %></div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
     </div>
-<% } %>
+  <% }) } else if (typeof e === 'string' && e.length) { %>
+    <div class="toast align-items-center text-white bg-danger border-0" role="status" aria-live="assertive" aria-atomic="true" data-bs-delay="6000" data-bs-autohide="true">
+      <div class="d-flex">
+        <div class="toast-body"><%= error %></div>
+        <button type="button" class="btn-close btn-close-white me-2 m-auto" data-bs-dismiss="toast" aria-label="Close"></button>
+      </div>
+    </div>
+  <% } %>
+</div>
+
+<script>
+  (function(){
+    function showToasts(){
+      var toasts = document.querySelectorAll('.toast');
+      if (!toasts.length || typeof bootstrap === 'undefined' || !bootstrap.Toast) return false;
+      toasts.forEach(function(t){ new bootstrap.Toast(t).show(); });
+      return true;
+    }
+
+    // Try immediately (in case Bootstrap is already loaded)
+    if (!showToasts()) {
+      // Fallback on DOMContentLoaded and load
+      document.addEventListener('DOMContentLoaded', showToasts, { once: true });
+      window.addEventListener('load', showToasts, { once: true });
+      // As a last resort, poll briefly for bootstrap
+      var tries = 0;
+      var iv = setInterval(function(){
+        tries++;
+        if (showToasts() || tries > 20) clearInterval(iv);
+      }, 100);
+    }
+  })();
+</script>

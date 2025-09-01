@@ -118,6 +118,28 @@
         if (!isValid) {
           event.stopPropagation();
           event.preventDefault();
+        } else {
+          // Disable submit to prevent duplicate submissions and show loading state
+          const submitBtn = form.querySelector('.js-submit-btn, button[type="submit"], button:not([type]), input[type="submit"]');
+          if (submitBtn && !submitBtn.disabled) {
+            // Determine loading text
+            const action = (form.getAttribute('action') || '').toLowerCase();
+            const isLoginForm = action.includes('/login') || (typeof window !== 'undefined' && window.location && window.location.pathname === '/login');
+            const loadingText = submitBtn.dataset.loadingText || (isLoginForm ? 'Logging in...' : 'Processing...');
+
+            // Preserve original label
+            if (submitBtn.tagName.toLowerCase() === 'button') {
+              submitBtn.dataset.originalText = submitBtn.innerHTML;
+              submitBtn.innerHTML = `${loadingText} <span class="spinner-border spinner-border-sm ms-2" role="status" aria-hidden="true"></span>`;
+            } else {
+              submitBtn.dataset.originalText = submitBtn.value || 'Submit';
+              submitBtn.value = loadingText;
+            }
+
+            submitBtn.disabled = true;
+            submitBtn.classList.add('disabled');
+            submitBtn.setAttribute('aria-disabled', 'true');
+          }
         }
 
         form.classList.add("was-validated");

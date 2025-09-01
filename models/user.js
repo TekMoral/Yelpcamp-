@@ -6,10 +6,13 @@ const UserSchema = new Schema({
     email: {
         type: String,
         required: true,
-        unique: true
+        unique: true,
+        lowercase: true,
+        trim: true
     }
 })
 
-UserSchema.plugin(passportLocalMongoose)
+// Use email as the username field for authentication
+UserSchema.plugin(passportLocalMongoose, { usernameField: 'email', usernameLowerCase: true });
 
 module.exports = mongoose.model('User', UserSchema)
